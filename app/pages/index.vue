@@ -10,20 +10,28 @@ enum ProxyStatus {
   DISCONNECTING = 'Disconnecting...',
 }
 
-const status = ref(ProxyStatus.NOT_CONNECTED)
-const isConnected = ref(false)
-const service = createSingBox()
+const globalStore = useGlobalStore()
+const configStore = useConfigStore()
+const { isConnected } = storeToRefs(globalStore)
+const { inbounds, outbounds } = storeToRefs(configStore)
+const { isLoading, enable, disable } = useSingBox()
+
+const outbound = computed(() => outbounds.value?.[0])
+const inbound = computed(() => inbounds.value?.[0])
+const disabled = computed(() => !inbound.value || !outbound.value)
 
 const router = useRouter()
 
-function onChangeStatus(value: boolean) {
-  isConnected.value = value
-  toggleSystemProxyStatus(value)
+async function onChangeStatus(value: boolean) {
+  if (disabled.value)
+    return
 
   if (value)
-    service.start()
+    await enable()
   else
-    service.stop()
+    await disable()
+
+  isConnected.value = value
 }
 </script>
 
@@ -49,13 +57,13 @@ function onChangeStatus(value: boolean) {
           </div>
 
           <div class="flex items-center gap-2">
-            <span class="text-zinc-600/50">{{ status }}</span>
-            <Switch :checked="isConnected" @update:checked="onChangeStatus" />
+            <span class="text-zinc-600/50">{{ isConnected ? (isLoading ? ProxyStatus.DISCONNECTING : ProxyStatus.CONNECTED) : (isLoading ? ProxyStatus.CONNECTING : ProxyStatus.NOT_CONNECTED) }}</span>
+            <Switch :disabled="disabled" :checked="isConnected" @update:checked="onChangeStatus" />
           </div>
         </div>
       </div>
 
-      <div>
+      <div v-if="outbound">
         <div class="ml-2 mb-2 font-semibold">
           Selected Server
         </div>
@@ -69,10 +77,10 @@ function onChangeStatus(value: boolean) {
 
               <div>
                 <div class="font-semibold">
-                  c32s3.portablessubmarines.com
+                  {{ outbound.server }}
                 </div>
-                <div class="text-zinc-600/50 text-[0.6rem]">
-                  VMess
+                <div class="text-zinc-600/50 text-[0.6rem] uppercase">
+                  {{ outbound.type }}
                 </div>
               </div>
             </div>
@@ -85,7 +93,7 @@ function onChangeStatus(value: boolean) {
           <div class="flex justify-between pl-10 h-5 items-center">
             <div>Address</div>
             <div class="text-zinc-600/50">
-              c32s3.portablessubmarines.com
+              {{ outbound.server }}
             </div>
           </div>
 

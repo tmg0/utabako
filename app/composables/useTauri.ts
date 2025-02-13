@@ -1,5 +1,5 @@
 export function useTauriStorage<T = unknown>(key: string, initialValue: MaybeRefOrGetter<T>, file: string) {
-  return useStorageAsync(
+  return useStorageAsync<T>(
     key,
     initialValue,
     createTrauriStorage(file),
@@ -8,6 +8,6 @@ export function useTauriStorage<T = unknown>(key: string, initialValue: MaybeRef
         read: (v: any) => v ?? undefined,
         write: (v: any) => v,
       },
-    }
+    },
   )
 }
