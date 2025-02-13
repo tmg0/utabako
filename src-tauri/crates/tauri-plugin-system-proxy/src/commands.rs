@@ -60,3 +60,8 @@ pub(crate) async fn get() -> Result<SystemProxyReturn, ()> {
 
     Ok(results)
 }
+
+#[command]
+pub(crate) async fn unset() {
+    SystemProxy::unset();
+}

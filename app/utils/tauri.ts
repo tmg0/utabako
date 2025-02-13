@@ -4,6 +4,14 @@ import { appDataDir } from '@tauri-apps/api/path'
 import { LazyStore } from '@tauri-apps/plugin-store'
 import { join } from 'pathe'
 
+interface SystemProxy {
+  isEnabled: boolean
+  host: string
+  port: number
+  bypass: string
+  protocol: string
+}
+
 export function createTrauriStorage(path: string): StorageLikeAsync {
   const store = new LazyStore(path)
 
@@ -38,5 +46,12 @@ export function createSingBox() {
 }
 
 export function toggleSystemProxyStatus(isEnabled: boolean, protocol = 'socks') {
-  invoke<string>('plugin:system-proxy|set', { isEnabled, protocol })
+  if (isEnabled)
+    invoke('plugin:system-proxy|set', { isEnabled, protocol })
+  else
+    invoke('plugin:system-proxy|unset')
+}
+
+export async function loadSystemProxySettings() {
+  return invoke<SystemProxy>('plugin:system-proxy|get')
 }

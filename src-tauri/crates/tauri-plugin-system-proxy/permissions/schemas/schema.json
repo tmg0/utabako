@@ -315,6 +315,16 @@
           "const": "deny-set"
         },
         {
+          "description": "Enables the unset command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-unset"
+        },
+        {
+          "description": "Denies the unset command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-unset"
+        },
+        {
           "description": "Default permissions for the plugin",
           "type": "string",
           "const": "default"

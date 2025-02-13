@@ -4,6 +4,7 @@ Default permissions for the plugin
 
 - `allow-get`
 - `allow-set`
+- `allow-unset`
 
 ## Permission Table
 
@@ -62,6 +63,32 @@ Enables the set command without any pre-configured scope.
 <td>
 
 Denies the set command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`system-proxy:allow-unset`
+
+</td>
+<td>
+
+Enables the unset command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`system-proxy:deny-unset`
+
+</td>
+<td>
+
+Denies the unset command without any pre-configured scope.
 
 </td>
 </tr>
