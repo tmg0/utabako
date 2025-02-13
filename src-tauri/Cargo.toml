@@ -28,5 +28,6 @@ tauri = { version = "2.2.4", features = [] }
 tauri-plugin-log = "2.0.0-rc"
 tauri-plugin-decorum = "1.1.1"
 tauri-plugin-shell = "2"
-tauri-plugin-sing-box = { version = "0.1.0", path = "./crates/tauri-plugin-sing-box" }
 tauri-plugin-store = "2"
+tauri-plugin-sing-box = { version = "0.1.0", path = "./crates/tauri-plugin-sing-box" }
+tauri-plugin-system-proxy = { version = "0.1.0", path = "./crates/tauri-plugin-system-proxy" }

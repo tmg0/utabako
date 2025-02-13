@@ -18,6 +18,7 @@ const router = useRouter()
 
 function onChangeStatus(value: boolean) {
   isConnected.value = value
+  toggleSystemProxyStatus(value)
 
   if (value)
     service.start()

@@ -36,3 +36,7 @@ export function createSingBox() {
     },
   }
 }
+
+export function toggleSystemProxyStatus(isEnabled: boolean, protocol = 'socks') {
+  invoke<string>('plugin:system-proxy|set', { isEnabled, protocol })
+}

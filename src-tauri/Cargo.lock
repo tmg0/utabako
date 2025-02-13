@@ -110,6 +110,7 @@ dependencies = [
  "tauri-plugin-shell",
  "tauri-plugin-sing-box",
  "tauri-plugin-store",
+ "tauri-plugin-system-proxy",
 ]
 
 [[package]]
@@ -4057,7 +4058,6 @@ dependencies = [
 name = "tauri-plugin-sing-box"
 version = "0.1.0"
 dependencies = [
- "rustem_proxy",
  "serde",
  "tauri",
  "tauri-plugin",
@@ -4080,6 +4080,17 @@ dependencies = [
  "thiserror 2.0.11",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "tauri-plugin-system-proxy"
+version = "0.1.0"
+dependencies = [
+ "rustem_proxy",
+ "serde",
+ "tauri",
+ "tauri-plugin",
+ "thiserror 2.0.11",
 ]
 
 [[package]]
