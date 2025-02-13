@@ -25,7 +25,7 @@ export function createTrauriStorage(path: string): StorageLikeAsync {
 
 export function createSingBox() {
   return {
-    async start(config?: string) {
+    async start() {
       invoke<string>('plugin:sing-box|start', {
         config: join(await appDataDir(), 'config.json'),
       })
