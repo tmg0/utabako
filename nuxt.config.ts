@@ -9,11 +9,17 @@ export default defineNuxtConfig({
   },
 
   modules: [
+    '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
     'shadcn-nuxt',
     '@nuxtjs/color-mode',
+    '@vueuse/nuxt',
     'unplugin-icons/nuxt',
   ],
+
+  pinia: {
+    storesDirs: ['./app/stores/**'],
+  },
 
   shadcn: {
     componentDir: './app/components/ui',
