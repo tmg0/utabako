@@ -15,7 +15,7 @@ const router = useRouter()
         </Button>
 
         <div v-else class="flex mx-2 gap-1 items-center text-xs">
-          <img src="/images/utabako.png" class="size-5" />
+          <img src="/images/utabako.png" class="size-5">
           <span>UtaBako</span>
         </div>
       </div>
