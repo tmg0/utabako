@@ -6,8 +6,8 @@ async function run() {
   const { stdout } = await execa('rustc', ['-vV'])
   const targetTriple = /host: (\S+)/.exec(stdout)[1]
 
-  execa('nuxt', ['generate'], { stdio: 'inherit'})
-  execa('make', [`OUTPUT=../src-tauri/binaries/sing-box-${targetTriple}${ext}`], {  stdio: 'inherit', cwd: './sing-box' })
+  execa('nuxt', ['generate'], { stdio: 'inherit' })
+  execa('make', [`OUTPUT=../src-tauri/binaries/sing-box-${targetTriple}${ext}`], { stdio: 'inherit', cwd: './sing-box' })
 }
 
 run()

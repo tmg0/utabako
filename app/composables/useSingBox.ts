@@ -6,19 +6,15 @@ export function useSingBox() {
 
   async function enable() {
     isLoading.value = true
-    await Promise.all([
-      service.start(),
-      proxy.enable(),
-    ])
+    service.start()
+    await proxy.enable()
     isLoading.value = false
   }
 
   async function disable() {
     isLoading.value = true
-    await Promise.all([
-      service.stop(),
-      proxy.disable(),
-    ])
+    service.stop()
+    await proxy.disable()
     isLoading.value = false
   }
 

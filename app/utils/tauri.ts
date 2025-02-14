@@ -39,6 +39,28 @@ function isEmpty(value: any) {
   return !value
 }
 
+export function until(value: () => any | Promise<any>, truthyValue: any = true, ms = 500, retries = 3): Promise<void> {
+  return new Promise((resolve) => {
+    let attempts = 1
+
+    async function c() {
+      const _v = await value()
+      if (_v === truthyValue) {
+        resolve()
+      }
+      else if (attempts < retries) {
+        attempts++
+        setTimeout(c, ms)
+      }
+      else {
+        resolve()
+      }
+    }
+
+    c()
+  })
+}
+
 export function createTrauriStorage(path: string): StorageLikeAsync {
   const store = new LazyStore(path)
 
@@ -59,12 +81,20 @@ export function createTrauriStorage(path: string): StorageLikeAsync {
   }
 }
 
+function isPortAvailable() {
+  return invoke<boolean>('plugin:port-plz|check', {
+    port: 5129,
+  })
+}
+
 export function createSingBox() {
   return {
     async start() {
-      return invoke<string>('plugin:sing-box|start', {
+      await invoke<string>('plugin:sing-box|start', {
         config: join(await appDataDir(), 'config.json'),
       })
+
+      await until(isPortAvailable, false)
     },
 
     stop() {

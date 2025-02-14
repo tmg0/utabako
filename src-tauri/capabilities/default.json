@@ -17,6 +17,7 @@
     "shell:allow-execute",
     "sing-box:default",
     "system-proxy:default",
+    "port-plz:default",
     "store:default",
     {
       "identifier": "http:default",
