@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ChevronRight from '~icons/heroicons/chevron-right'
-import Cog6Tooth from '~icons/heroicons/cog-6-tooth'
 import GlobeAsiaAustraliaSolid from '~icons/heroicons/globe-asia-australia-solid'
 
 enum ProxyStatus {
@@ -20,8 +19,6 @@ const outbound = computed(() => outbounds.value?.[0])
 const inbound = computed(() => inbounds.value?.[0])
 const disabled = computed(() => !inbound.value || !outbound.value)
 
-const router = useRouter()
-
 async function onChangeStatus(value: boolean) {
   if (disabled.value)
     return
@@ -37,18 +34,6 @@ async function onChangeStatus(value: boolean) {
 
 <template>
   <div>
-    <div class="h-12 -mt-12 flex items-center pl-[72px] justify-between">
-      <Button variant="ghost" size="sm" class="relative z-[101] mx-2 text-xs font-semibold" @click="router.replace({ name: 'index' })">
-        UtaBako
-      </Button>
-
-      <Button variant="ghost" size="icon" class="relative z-[101] w-8 h-8 p-0 mr-2" @click="router.replace({ name: 'settings' })">
-        <Cog6Tooth />
-      </Button>
-    </div>
-
-    <Separator />
-
     <div class="p-5 flex flex-col gap-6 text-xs">
       <div class="rounded-md border bg-zinc-100 py-2 pl-3 pr-2">
         <div class="flex items-center justify-between">
