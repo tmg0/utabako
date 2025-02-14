@@ -1,6 +1,6 @@
 import { destr } from 'destr'
 
-interface SubmitOptions { 
+interface SubmitOptions {
   afterSubmit: () => void
 }
 
@@ -52,7 +52,7 @@ export function useSubscription() {
   const url = ref('')
   const { data, isFetching, execute } = useTauriFetch(url, { immediate: false }).get().text()
   const store = useConfigStore()
-const { outbounds } = storeToRefs(store)
+  const { outbounds } = storeToRefs(store)
 
   const servers = computed(() => {
     if (!data.value)

@@ -19,7 +19,7 @@ function onSubmit() {
   submit({
     afterSubmit() {
       isOpen.value = false
-    }
+    },
   })
 }
 </script>
