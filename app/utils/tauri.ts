@@ -1,6 +1,7 @@
 import type { StorageLikeAsync } from '@vueuse/core'
 import { invoke } from '@tauri-apps/api/core'
 import { appDataDir } from '@tauri-apps/api/path'
+import { TrayIcon } from '@tauri-apps/api/tray'
 import { LazyStore } from '@tauri-apps/plugin-store'
 import { join } from 'pathe'
 
@@ -29,6 +30,19 @@ const DEFAULTS_STORE: Record<string, any> = {
   experimental: {},
 }
 
+let tray: TrayIcon
+
+export async function createTray() {
+  if (tray)
+    return tray
+
+  tray = await TrayIcon.new({
+
+  })
+
+  return tray
+}
+
 function isEmpty(value: any) {
   if (Array.isArray(value))
     return !value.length
@@ -53,7 +67,8 @@ export function until(value: () => any | Promise<any>, truthyValue: any = true, 
         setTimeout(c, ms)
       }
       else {
-        reject()
+        const error = new Error('Sing box start failed')
+        reject(error)
       }
     }
 
