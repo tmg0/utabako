@@ -62,6 +62,6 @@ pub(crate) async fn get() -> Result<SystemProxyReturn, ()> {
 }
 
 #[command]
-pub(crate) async fn unset() {
+pub fn unset() {
     SystemProxy::unset();
 }

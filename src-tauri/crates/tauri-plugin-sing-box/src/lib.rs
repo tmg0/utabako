@@ -1,6 +1,6 @@
 use tauri::{
     plugin::{Builder, TauriPlugin},
-    AppHandle, Manager, Runtime,
+    AppHandle, Manager, RunEvent, Runtime,
 };
 
 use tauri_plugin_shell::ShellExt;
@@ -43,6 +43,13 @@ pub fn init() -> TauriPlugin<tauri::Wry> {
         .setup(|app, _| {
             app.manage(RwLock::new(SingBoxState::new()));
             Ok(())
+        })
+        .on_event(|app, event| match event {
+            RunEvent::Exit => {
+                let state = app.state::<RwLock<SingBoxState>>();
+                let _ = commands::stop(state);
+            }
+            _ => {}
         })
         .build()
 }

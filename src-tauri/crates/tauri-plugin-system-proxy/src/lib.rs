@@ -1,6 +1,6 @@
 use tauri::{
     plugin::{Builder, TauriPlugin},
-    Runtime,
+    RunEvent, Runtime,
 };
 
 mod commands;
@@ -16,5 +16,11 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             commands::get,
             commands::unset
         ])
+        .on_event(|_, event| match event {
+            RunEvent::Exit => {
+                commands::unset();
+            }
+            _ => {}
+        })
         .build()
 }
