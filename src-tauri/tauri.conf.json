@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "utabako",
+  "productName": "UtaBako",
   "version": "0.1.0",
   "identifier": "com.utabako.app",
   "build": {
