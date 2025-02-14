@@ -5,7 +5,7 @@ interface Log {
   timestamp: boolean
 }
 
-interface VmessOutbound {
+export interface VmessOutbound {
   type: 'vmess'
   server: string
   server_port: number
@@ -14,13 +14,21 @@ interface VmessOutbound {
   alter_id: number
 }
 
+export interface ShadowsocksOutbound {
+  type: 'shadowsocks'
+  server: string
+  server_port: number
+  method: string
+  password: string
+}
+
 interface Inbound {
   listen: string
   listen_port: number
   type: 'mixed'
 }
 
-type Outbound = VmessOutbound
+export type Outbound = ShadowsocksOutbound | VmessOutbound
 
 export const useConfigStore = defineStore('config', () => {
   const log = useTauriStorage<Partial<Log>>('log', {}, 'config.json')

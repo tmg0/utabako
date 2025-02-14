@@ -64,7 +64,7 @@ async function onChangeStatus(value: boolean) {
                 <div class="font-semibold">
                   {{ outbound.server }}
                 </div>
-                <div class="text-zinc-600/50 text-[0.6rem] uppercase">
+                <div class="text-zinc-600/50 text-[0.55rem] uppercase">
                   {{ outbound.type }}
                 </div>
               </div>

@@ -31,3 +31,4 @@ tauri-plugin-shell = "2"
 tauri-plugin-store = "2"
 tauri-plugin-sing-box = { version = "0.1.0", path = "./crates/tauri-plugin-sing-box" }
 tauri-plugin-system-proxy = { version = "0.1.0", path = "./crates/tauri-plugin-system-proxy" }
+tauri-plugin-http = "2"

@@ -1,14 +1,27 @@
 <script setup lang="ts">
 const store = useConfigStore()
 const { inbounds, outbounds } = storeToRefs(store)
-const { url } = useSubscription()
+const { url, isFetching, submit } = useSubscription()
 
 const disabled = computed(() => !inbounds.value.length || !outbounds.value.length)
 const isOpen = ref(false)
 
-onMounted(() => {
+useTimeoutFn(() => {
   isOpen.value = disabled.value
-})
+}, 300, { immediate: true })
+
+function onChangeOpen(value: boolean) {
+  if (!disabled.value)
+    isOpen.value = value
+}
+
+function onSubmit() {
+  submit({
+    afterSubmit() {
+      isOpen.value = false
+    }
+  })
+}
 </script>
 
 <template>
@@ -16,12 +29,12 @@ onMounted(() => {
     <TitleBar />
 
     <main vaul-drawer-wrapper>
-      <Drawer v-model:open="isOpen">
+      <Drawer :open="isOpen" :disabled="disabled" @update:open="onChangeOpen">
         <NuxtPage />
 
         <DrawerContent>
           <div class="mx-auto w-full max-w-sm text-xs">
-            <DrawerHeader class="mt-2">
+            <DrawerHeader>
               <DrawerTitle class="font-semibold text-left">
                 Add Servers
               </DrawerTitle>
@@ -30,13 +43,14 @@ onMounted(() => {
               </DrawerDescription>
             </DrawerHeader>
 
-            <div class="py-2 px-4 flex flex-col gap-2">
+            <div class="px-4 flex flex-col gap-2">
               <Textarea v-model="url" placeholder="Subscription URL" class="text-xs" />
               <Input placeholder="Name (Optional)" class="text-xs" />
             </div>
 
             <DrawerFooter>
-              <Button :disabled="!url">
+              <Button :disabled="!url || isFetching" @click="onSubmit">
+                <Spin v-if="isFetching" class="size-4" />
                 Submit
               </Button>
             </DrawerFooter>

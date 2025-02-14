@@ -1,3 +1,6 @@
+import { fetch } from '@tauri-apps/plugin-http'
+import { createFetch } from '@vueuse/core'
+
 export function useTauriStorage<T = unknown>(key: string, initialValue: MaybeRefOrGetter<T>, file: string) {
   return useStorageAsync<T>(
     key,
@@ -11,3 +14,9 @@ export function useTauriStorage<T = unknown>(key: string, initialValue: MaybeRef
     },
   )
 }
+
+export const useTauriFetch = createFetch({
+  options: {
+    fetch,
+  },
+})
