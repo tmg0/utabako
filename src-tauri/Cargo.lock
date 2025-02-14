@@ -106,10 +106,10 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-decorum",
+ "tauri-plugin-health-check",
  "tauri-plugin-http",
  "tauri-plugin-log",
  "tauri-plugin-os",
- "tauri-plugin-port-plz",
  "tauri-plugin-shell",
  "tauri-plugin-sing-box",
  "tauri-plugin-store",
@@ -4211,6 +4211,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "tauri-plugin-health-check"
+version = "0.1.0"
+dependencies = [
+ "port_check",
+ "serde",
+ "tauri",
+ "tauri-plugin",
+ "thiserror 2.0.11",
+]
+
+[[package]]
 name = "tauri-plugin-http"
 version = "2.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4267,17 +4278,6 @@ dependencies = [
  "serde_json",
  "serialize-to-javascript",
  "sys-locale",
- "tauri",
- "tauri-plugin",
- "thiserror 2.0.11",
-]
-
-[[package]]
-name = "tauri-plugin-port-plz"
-version = "0.1.0"
-dependencies = [
- "port_check",
- "serde",
  "tauri",
  "tauri-plugin",
  "thiserror 2.0.11",

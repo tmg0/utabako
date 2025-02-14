@@ -1,12 +1,12 @@
 [package]
-name = "tauri-plugin-port-plz"
+name = "tauri-plugin-health-check"
 version = "0.1.0"
 authors = [ "You" ]
 description = ""
 edition = "2021"
 rust-version = "1.77.2"
 exclude = ["/examples", "/dist-js", "/guest-js", "/node_modules"]
-links = "tauri-plugin-port-plz"
+links = "tauri-plugin-health-check"
 
 [dependencies]
 tauri = { version = "2.2.4" }

@@ -14,7 +14,7 @@ pub fn run() {
         .plugin(tauri_plugin_decorum::init())
         .plugin(tauri_plugin_sing_box::init())
         .plugin(tauri_plugin_system_proxy::init())
-        .plugin(tauri_plugin_port_plz::init())
+        .plugin(tauri_plugin_health_check::init())
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
             window.create_overlay_titlebar().unwrap();

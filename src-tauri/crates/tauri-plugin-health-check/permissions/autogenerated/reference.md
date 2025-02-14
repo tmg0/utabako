@@ -2,7 +2,7 @@
 
 Default permissions for the plugin
 
-- `allow-check`
+- `allow-ping`
 
 ## Permission Table
 
@@ -16,33 +16,7 @@ Default permissions for the plugin
 <tr>
 <td>
 
-`port-plz:allow-check`
-
-</td>
-<td>
-
-Enables the check command without any pre-configured scope.
-
-</td>
-</tr>
-
-<tr>
-<td>
-
-`port-plz:deny-check`
-
-</td>
-<td>
-
-Denies the check command without any pre-configured scope.
-
-</td>
-</tr>
-
-<tr>
-<td>
-
-`port-plz:allow-ping`
+`health-check:allow-ping`
 
 </td>
 <td>
@@ -55,7 +29,7 @@ Enables the ping command without any pre-configured scope.
 <tr>
 <td>
 
-`port-plz:deny-ping`
+`health-check:deny-ping`
 
 </td>
 <td>
