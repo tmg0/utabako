@@ -2,9 +2,14 @@ export const useGlobalStore = defineStore('global', () => {
   const isConnected = ref(false)
   const proxy = createSystemProxy()
 
+  async function isProxyAvailable() {
+    const { is_enabled } = await proxy.get()
+    return  is_enabled
+  }
+
   async function setup() {
-    const { isEnabled } = await proxy.get()
-    isConnected.value = isEnabled
+    const v = await Promise.all([isProxyAvailable(), isSingBoxAvailable()]) 
+    isConnected.value = v.every(i => i)
   }
 
   setup()

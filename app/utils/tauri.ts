@@ -5,7 +5,7 @@ import { LazyStore } from '@tauri-apps/plugin-store'
 import { join } from 'pathe'
 
 interface SystemProxy {
-  isEnabled: boolean
+  is_enabled: boolean
   host: string
   port: number
   bypass: string
@@ -40,7 +40,7 @@ function isEmpty(value: any) {
 }
 
 export function until(value: () => any | Promise<any>, truthyValue: any = true, ms = 500, retries = 3): Promise<void> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     let attempts = 1
 
     async function c() {
@@ -53,7 +53,7 @@ export function until(value: () => any | Promise<any>, truthyValue: any = true, 
         setTimeout(c, ms)
       }
       else {
-        resolve()
+        reject()
       }
     }
 
@@ -81,9 +81,9 @@ export function createTrauriStorage(path: string): StorageLikeAsync {
   }
 }
 
-function isPortAvailable() {
+export function isSingBoxAvailable(port = 5129) {
   return invoke<boolean>('plugin:port-plz|check', {
-    port: 5129,
+    port,
   })
 }
 
@@ -93,8 +93,7 @@ export function createSingBox() {
       await invoke<string>('plugin:sing-box|start', {
         config: join(await appDataDir(), 'config.json'),
       })
-
-      await until(isPortAvailable, false)
+      await until(isSingBoxAvailable)
     },
 
     stop() {
