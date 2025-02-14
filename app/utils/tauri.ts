@@ -53,8 +53,8 @@ function isEmpty(value: any) {
   return !value
 }
 
-export function until(value: () => any | Promise<any>, truthyValue: any = true, ms = 500, retries = 3): Promise<void> {
-  return new Promise((resolve, reject) => {
+export function until(value: () => any | Promise<any>, truthyValue: any = true, ms = 500, retries = 10): Promise<void> {
+  return new Promise((resolve) => {
     let attempts = 1
 
     async function c() {
@@ -67,8 +67,7 @@ export function until(value: () => any | Promise<any>, truthyValue: any = true, 
         setTimeout(c, ms)
       }
       else {
-        const error = new Error('Sing box start failed')
-        reject(error)
+        resolve()
       }
     }
 
