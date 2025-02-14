@@ -108,6 +108,7 @@ dependencies = [
  "tauri-plugin-decorum",
  "tauri-plugin-http",
  "tauri-plugin-log",
+ "tauri-plugin-port-plz",
  "tauri-plugin-shell",
  "tauri-plugin-sing-box",
  "tauri-plugin-store",
@@ -4185,6 +4186,16 @@ dependencies = [
  "tauri-plugin",
  "thiserror 2.0.11",
  "time",
+]
+
+[[package]]
+name = "tauri-plugin-port-plz"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "tauri",
+ "tauri-plugin",
+ "thiserror 2.0.11",
 ]
 
 [[package]]
