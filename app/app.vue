@@ -1,19 +1,17 @@
 <script setup lang="ts">
 const store = useConfigStore()
-const { inbounds, outbounds } = storeToRefs(store)
+const { outbounds } = storeToRefs(store)
 const { url, isFetching, submit } = useSubscription()
 
-const disabled = computed(() => !inbounds.value.length || !outbounds.value.length)
 const isOpen = ref(false)
 
 onMounted(async () => {
   await sleep()
-  isOpen.value = disabled.value
+  isOpen.value = !outbounds.value.length
 })
 
 function onChangeOpen(value: boolean) {
-  if (!disabled.value)
-    isOpen.value = value
+  isOpen.value = value
 }
 
 function onSubmit() {
@@ -30,7 +28,7 @@ function onSubmit() {
     <TitleBar class="flex-shrink-0" />
 
     <main vaul-drawer-wrapper class="flex-1 overflow-y-auto">
-      <Drawer :open="isOpen" :disabled="disabled" @update:open="onChangeOpen">
+      <Drawer :open="isOpen" @update:open="onChangeOpen">
         <NuxtPage />
 
         <DrawerContent>

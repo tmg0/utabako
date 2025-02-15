@@ -27,7 +27,7 @@ export function useServerStatus(value: MaybeRef<string>, options: UseServerStatu
 export function useServers() {
   const subscriptions = useTauriStorage<[string, SubscriptionOptions][]>('subscriptions', [], 'data.json')
 
-  const servers = computed(() => subscriptions.value.map(([_, options]) => options.servers).flat().filter(Boolean))
+  const servers = computed(() => (subscriptions.value || []).map(([_, options]) => options.servers).flat().filter(Boolean))
 
   return {
     servers,

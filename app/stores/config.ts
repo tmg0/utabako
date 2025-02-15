@@ -39,6 +39,12 @@ export const useConfigStore = defineStore('config', () => {
   const outbounds = useTauriStorage<Outbound[]>('outbounds', [], 'config.json')
   const route = useTauriStorage('route', {}, 'config.json')
   const experimental = useTauriStorage('experimental', {}, 'config.json')
+  const { servers } = useServers()
+
+  watchEffect(() => {
+    if (!outbounds.value.length && servers.value.length)
+      outbounds.value = [servers.value[0]!]
+  })
 
   return {
     log,
