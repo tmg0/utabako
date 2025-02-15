@@ -33,6 +33,12 @@ const DEFAULTS_STORE: Record<string, any> = {
 
 let tray: TrayIcon
 
+export function sleep(ms = 300) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
 export async function createTray() {
   if (tray)
     return tray

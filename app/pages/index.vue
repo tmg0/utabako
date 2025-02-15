@@ -14,6 +14,7 @@ const configStore = useConfigStore()
 const { isConnected } = storeToRefs(globalStore)
 const { inbounds, outbounds } = storeToRefs(configStore)
 const { isLoading, enable, disable } = useSingBox()
+const router = useRouter()
 
 const outbound = computed(() => outbounds.value?.[0])
 const inbound = computed(() => inbounds.value?.[0])
@@ -42,7 +43,7 @@ async function onChangeStatus(value: boolean) {
           </div>
 
           <div class="flex items-center gap-2">
-            <span class="text-zinc-600/50">{{ isConnected ? (isLoading ? ProxyStatus.DISCONNECTING : ProxyStatus.CONNECTED) : (isLoading ? ProxyStatus.CONNECTING : ProxyStatus.NOT_CONNECTED) }}</span>
+            <span class="text-muted-foreground">{{ isConnected ? (isLoading ? ProxyStatus.DISCONNECTING : ProxyStatus.CONNECTED) : (isLoading ? ProxyStatus.CONNECTING : ProxyStatus.NOT_CONNECTED) }}</span>
             <Switch :disabled="disabled" :checked="isConnected" @update:checked="onChangeStatus" />
           </div>
         </div>
@@ -54,7 +55,7 @@ async function onChangeStatus(value: boolean) {
         </div>
 
         <div class="rounded-md border bg-zinc-100 py-2 px-3">
-          <div class="flex items-center justify-between cursor-pointer">
+          <div class="flex items-center justify-between cursor-pointer" @click="router.replace({ name: 'servers' })">
             <div class="flex items-center gap-2">
               <div class=" bg-primary size-8 rounded-lg flex items-center justify-center">
                 <GlobeAsiaAustraliaSolid class="size-6 text-white" />
@@ -64,7 +65,7 @@ async function onChangeStatus(value: boolean) {
                 <div class="font-semibold">
                   {{ outbound.server }}
                 </div>
-                <div class="text-zinc-600/50 text-[0.55rem] uppercase">
+                <div class="text-muted-foreground text-[0.6rem] capitalize">
                   {{ outbound.type }}
                 </div>
               </div>
@@ -77,7 +78,7 @@ async function onChangeStatus(value: boolean) {
 
           <div class="flex justify-between pl-10 h-5 items-center">
             <div>Address</div>
-            <div class="text-zinc-600/50">
+            <div class="text-muted-foreground">
               {{ outbound.server }}
             </div>
           </div>
@@ -86,7 +87,7 @@ async function onChangeStatus(value: boolean) {
 
           <div class="flex justify-between items-center h-5 pl-10">
             <div>Status</div>
-            <ServiceStatus :value="[outbound.server, outbound.server_port ?? 80].join(':')" show-check-btn />
+            <ServerStatus :value="[outbound.server, outbound.server_port ?? 80].join(':')" show-check-btn />
           </div>
         </div>
       </div>

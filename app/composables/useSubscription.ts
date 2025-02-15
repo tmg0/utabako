@@ -4,6 +4,10 @@ interface SubmitOptions {
   afterSubmit: () => void
 }
 
+export interface SubscriptionOptions {
+  servers: Outbound[]
+}
+
 const parser = {
   shadowsocks(value: string): ShadowsocksOutbound | undefined {
     try {
@@ -53,6 +57,7 @@ export function useSubscription() {
   const { data, isFetching, execute } = useTauriFetch(url, { immediate: false }).get().text()
   const store = useConfigStore()
   const { outbounds } = storeToRefs(store)
+  const subscriptions = useTauriStorage<[string, SubscriptionOptions][]>('subscriptions', [], 'data.json')
 
   const servers = computed(() => {
     if (!data.value)
@@ -77,7 +82,7 @@ export function useSubscription() {
     }
   })
 
-  async function submit(options: Partial<SubmitOptions> = {}) {
+  async function submit({ afterSubmit }: Partial<SubmitOptions> = {}) {
     if (!url.value)
       return
 
@@ -86,9 +91,17 @@ export function useSubscription() {
     if (!servers.value.length)
       return
 
+    const cached = subscriptions.value || []
+    const index = cached.findIndex(([value]) => value === url.value)
+
+    if (index > -1)
+      subscriptions.value[index]![1].servers = servers.value
+    else
+      subscriptions.value = [...subscriptions.value, [url.value, { servers: servers.value }]]
+
     outbounds.value = [servers.value[0]!]
     url.value = ''
-    options.afterSubmit?.()
+    afterSubmit?.()
   }
 
   return {

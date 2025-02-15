@@ -6,9 +6,10 @@ const { url, isFetching, submit } = useSubscription()
 const disabled = computed(() => !inbounds.value.length || !outbounds.value.length)
 const isOpen = ref(false)
 
-useTimeoutFn(() => {
+onMounted(async () => {
+  await sleep()
   isOpen.value = disabled.value
-}, 300, { immediate: true })
+})
 
 function onChangeOpen(value: boolean) {
   if (!disabled.value)
@@ -26,9 +27,9 @@ function onSubmit() {
 
 <template>
   <div class="w-screen h-screen flex flex-col overflow-hidden bg-zinc-50">
-    <TitleBar />
+    <TitleBar class="flex-shrink-0" />
 
-    <main vaul-drawer-wrapper>
+    <main vaul-drawer-wrapper class="flex-1 overflow-y-auto">
       <Drawer :open="isOpen" :disabled="disabled" @update:open="onChangeOpen">
         <NuxtPage />
 

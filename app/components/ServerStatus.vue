@@ -4,14 +4,14 @@ const props = defineProps<{
   showCheckBtn?: boolean
 }>()
 
-const service = toRef(props.value)
-const { status, execute } = useServiceStatus(service)
+const server = toRef(props.value)
+const { status, execute } = useServerStatus(server)
 
 const color = computed(() => {
   const colors = {
-    [ServiceStatus.UNKNOWN]: ['bg-zinc-400', 'bg-zinc-500'],
-    [ServiceStatus.ONLINE]: ['bg-green-400', 'bg-green-500'],
-    [ServiceStatus.OFFLINE]: ['bg-red-400', 'bg-red-500'],
+    [ServerStatus.UNKNOWN]: ['bg-zinc-400', 'bg-zinc-500'],
+    [ServerStatus.ONLINE]: ['bg-green-400', 'bg-green-500'],
+    [ServerStatus.OFFLINE]: ['bg-red-400', 'bg-red-500'],
   }
 
   return colors[status.value]
@@ -29,6 +29,6 @@ const color = computed(() => {
       <span class="relative inline-flex rounded-full h-2 w-2" :class="color[1]" />
     </span>
 
-    <span class="text-zinc-600/50">{{ status }}</span>
+    <span class="text-muted-foreground">{{ status }}</span>
   </div>
 </template>
