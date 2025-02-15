@@ -5,6 +5,7 @@ const store = useConfigStore()
 const { outbounds } = storeToRefs(store)
 const outbound = computed(() => outbounds.value?.[0])
 const selected = ref<string>()
+const { isLoading, restart } = useSingBox()
 
 onMounted(async () => {
   await sleep(50)
@@ -22,10 +23,11 @@ function host(value?: Outbound) {
   }
 }
 
-function onSave() {
+async function onSave() {
   const server = servers.value.find(v => host(v) === selected.value)
   if (server)
     outbounds.value = [server]
+  await restart()
   router.replace({ name: 'index' })
 }
 </script>
@@ -41,7 +43,7 @@ function onSave() {
         Cancel
       </Button>
 
-      <Button size="sm" :disabled="host(outbound) === selected" @click="onSave">
+      <Button size="sm" :disabled="host(outbound) === selected || isLoading" @click="onSave">
         Save Changes
       </Button>
     </div>
