@@ -34,3 +34,6 @@ tauri-plugin-sing-box = { version = "0.1.0", path = "./crates/tauri-plugin-sing-
 tauri-plugin-system-proxy = { version = "0.1.0", path = "./crates/tauri-plugin-system-proxy" }
 tauri-plugin-health-check = { version = "0.1.0", path = "./crates/tauri-plugin-health-check" }
 tauri-plugin-os = "2"
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-single-instance = "2"

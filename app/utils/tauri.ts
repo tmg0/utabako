@@ -1,4 +1,5 @@
 import type { StorageLikeAsync } from '@vueuse/core'
+import { defaultWindowIcon } from '@tauri-apps/api/app'
 import { invoke } from '@tauri-apps/api/core'
 import { appDataDir } from '@tauri-apps/api/path'
 import { TrayIcon } from '@tauri-apps/api/tray'
@@ -21,7 +22,7 @@ const DEFAULTS_STORE: Record<string, any> = {
 
   inbounds: [{
     listen: '::',
-    listen_port: 5129,
+    listen_port: DEFAULT_SING_BOX_INBOUND_PORT,
     type: 'mixed',
   }],
 
@@ -36,9 +37,11 @@ export async function createTray() {
   if (tray)
     return tray
 
-  tray = await TrayIcon.new({
+  const options = {
+    icon: (await defaultWindowIcon()) ?? undefined,
+  }
 
-  })
+  tray = await TrayIcon.new(options)
 
   return tray
 }
@@ -95,7 +98,7 @@ export function createTrauriStorage(path: string): StorageLikeAsync {
   }
 }
 
-export function isSingBoxAvailable(port = 5129) {
+export function isSingBoxAvailable(port = DEFAULT_SING_BOX_INBOUND_PORT) {
   return invoke<boolean>('plugin:health-check|ping', {
     service: ['127.0.0.1', port].join(':'),
   })
@@ -119,7 +122,11 @@ export function createSingBox() {
 export function createSystemProxy() {
   return {
     enable(protocol = 'socks') {
-      return invoke('plugin:system-proxy|set', { isEnabled: true, protocol })
+      return invoke('plugin:system-proxy|set', {
+        isEnabled: true,
+        port: DEFAULT_SING_BOX_INBOUND_PORT,
+        protocol,
+      })
     },
 
     disable() {

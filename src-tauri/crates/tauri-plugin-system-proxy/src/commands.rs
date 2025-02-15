@@ -21,7 +21,7 @@ static DEFAULT_BYPASS: &str = "127.0.0.1,localhost,<local>";
 static DEFAULT_HOST: &str = "127.0.0.1";
 
 #[command]
-pub(crate) async fn set(is_enabled: bool, protocol: String) {
+pub(crate) async fn set(is_enabled: bool, port: u16, protocol: String) {
     let bypass = if is_enabled { DEFAULT_BYPASS } else { "" };
 
     let protocol = match protocol.as_str() {
@@ -34,7 +34,7 @@ pub(crate) async fn set(is_enabled: bool, protocol: String) {
     SystemProxy::set(SystemProxy {
         is_enabled: is_enabled,
         host: DEFAULT_HOST.to_string(),
-        port: 5129,
+        port,
         bypass: bypass.to_string(),
         protocol: protocol,
     });

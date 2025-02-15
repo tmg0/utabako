@@ -3,6 +3,7 @@ use tauri::{
     AppHandle, Manager, RunEvent, Runtime,
 };
 
+use command_group::{CommandGroup, GroupChild};
 use tauri_plugin_shell::ShellExt;
 use tokio::sync::RwLock;
 
@@ -12,7 +13,7 @@ mod error;
 pub use error::{Error, Result};
 
 pub(crate) struct SingBoxState {
-    service: Option<std::process::Child>,
+    service: Option<GroupChild>,
 }
 
 impl SingBoxState {
@@ -21,16 +22,19 @@ impl SingBoxState {
     }
 
     pub(crate) fn start<R: Runtime>(&mut self, app: AppHandle<R>, config: String) -> Result<()> {
-        let tauri_cmd = app.shell().sidecar("sing-box").unwrap();
-        let mut std_cmd = std::process::Command::from(tauri_cmd);
-        let child = std_cmd.args(["run", "-c", &config]).spawn()?;
-        self.service = Some(child);
+        if self.service.is_none() {
+            let tauri_cmd = app.shell().sidecar("sing-box").unwrap();
+            let mut std_cmd = std::process::Command::from(tauri_cmd);
+            let child = std_cmd.args(["run", "-c", &config]).group_spawn()?;
+            self.service = Some(child);
+        }
         Ok(())
     }
 
     pub(crate) fn stop(&mut self) -> Result<()> {
         if let Some(ref mut value) = self.service {
             let _ = value.kill();
+            self.service = None;
         }
         Ok(())
     }
