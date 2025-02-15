@@ -99,9 +99,11 @@ export function createTrauriStorage(path: string): StorageLikeAsync {
 }
 
 export function isSingBoxAvailable(port = DEFAULT_SING_BOX_INBOUND_PORT) {
-  return invoke<boolean>('plugin:health-check|ping', {
-    service: ['127.0.0.1', port].join(':'),
-  })
+  return pingService(['127.0.0.1', port].join(':'))
+}
+
+export function pingService(service: string) {
+  return invoke<boolean>('plugin:health-check|ping', { service })
 }
 
 export function createSingBox() {

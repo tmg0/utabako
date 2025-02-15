@@ -86,19 +86,7 @@ async function onChangeStatus(value: boolean) {
 
           <div class="flex justify-between items-center h-5 pl-10">
             <div>Status</div>
-
-            <div class="flex items-center gap-2">
-              <Button variant="outline" class="text-[0.73rem] px-2 h-5 font-normal mr-2 hover:bg-white">
-                Check Status
-              </Button>
-
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-              </span>
-
-              <span class="text-zinc-600/50">Online</span>
-            </div>
+            <ServiceStatus :value="[outbound.server, outbound.server_port ?? 80].join(':')" show-check-btn />
           </div>
         </div>
       </div>
