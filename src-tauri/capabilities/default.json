@@ -13,6 +13,7 @@
     "core:window:allow-set-focus",
     "core:window:allow-start-dragging",
     "core:app:allow-default-window-icon",
+    "core:app:allow-app-show",
     "decorum:allow-show-snap-overlay",
     "shell:default",
     "shell:allow-execute",
@@ -21,6 +22,7 @@
     "health-check:default",
     "store:default",
     "os:default",
+    "process:default",
     {
       "identifier": "http:default",
       "allow": [

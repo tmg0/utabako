@@ -2,7 +2,6 @@ import type { StorageLikeAsync } from '@vueuse/core'
 import { defaultWindowIcon } from '@tauri-apps/api/app'
 import { invoke } from '@tauri-apps/api/core'
 import { appDataDir } from '@tauri-apps/api/path'
-import { TrayIcon } from '@tauri-apps/api/tray'
 import { LazyStore } from '@tauri-apps/plugin-store'
 import { join } from 'pathe'
 
@@ -31,25 +30,10 @@ const DEFAULTS_STORE: Record<string, any> = {
   experimental: {},
 }
 
-let tray: TrayIcon
-
 export function sleep(ms = 300) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms)
   })
-}
-
-export async function createTray() {
-  if (tray)
-    return tray
-
-  const options = {
-    icon: (await defaultWindowIcon()) ?? undefined,
-  }
-
-  tray = await TrayIcon.new(options)
-
-  return tray
 }
 
 function isEmpty(value: any) {

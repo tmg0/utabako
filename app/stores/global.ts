@@ -1,6 +1,5 @@
 export const useGlobalStore = defineStore('global', () => {
   const isConnected = ref(false)
-  const tray = useTray()
   const { isAvailable } = useSingBox()
 
   async function setup() {
@@ -10,7 +9,6 @@ export const useGlobalStore = defineStore('global', () => {
   setup()
 
   return {
-    tray,
     isConnected,
   }
 })

@@ -20,17 +20,3 @@ export const useTauriFetch = createFetch({
     fetch,
   },
 })
-
-export function useTray() {
-  const tray = ref()
-
-  async function setup() {
-    tray.value = await createTray()
-  }
-
-  setup()
-
-  return {
-    tray,
-  }
-}
