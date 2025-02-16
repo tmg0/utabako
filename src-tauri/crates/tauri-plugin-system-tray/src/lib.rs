@@ -1,4 +1,5 @@
 use tauri::{
+    image::Image,
     menu::{Menu, MenuItem},
     plugin::{Builder, TauriPlugin},
     tray::TrayIconBuilder,
@@ -18,8 +19,11 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
 
+            let default_tray_icon =
+                Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoInactive.png")).unwrap();
+
             let _ = TrayIconBuilder::new()
-                .icon(app.default_window_icon().unwrap().clone())
+                .icon(default_tray_icon)
                 .menu(&menu)
                 .on_menu_event(move |app, event| match event.id.as_ref() {
                     "show" => {
