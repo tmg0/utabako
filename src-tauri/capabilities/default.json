@@ -30,6 +30,7 @@
           "url": "https://*"
         }
       ]
-    }
+    },
+    "fs:default"
   ]
 }

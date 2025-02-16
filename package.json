@@ -15,6 +15,7 @@
     "@nuxtjs/color-mode": "3.5.2",
     "@pinia/nuxt": "^0.10.1",
     "@tauri-apps/api": "^2.2.0",
+    "@tauri-apps/plugin-fs": "~2",
     "@tauri-apps/plugin-http": "~2",
     "@tauri-apps/plugin-os": "~2",
     "@tauri-apps/plugin-process": "~2",

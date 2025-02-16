@@ -106,6 +106,7 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-decorum",
+ "tauri-plugin-fs",
  "tauri-plugin-health-check",
  "tauri-plugin-http",
  "tauri-plugin-log",

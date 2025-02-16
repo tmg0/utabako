@@ -1,5 +1,4 @@
-import { appDataDir } from '@tauri-apps/api/path'
-import { join } from 'pathe'
+import { BaseDirectory, readTextFileLines } from '@tauri-apps/plugin-fs'
 
 export interface Log {
   disabled?: boolean
@@ -38,6 +37,12 @@ const DEFAULT_INBOUNDS: Inbound[] = [{
   listen_port: DEFAULT_SING_BOX_INBOUND_PORT,
   type: 'mixed',
 }]
+
+const DEFAULT_LOG: Log = {
+  disabled: true,
+  level: 'info',
+  timestamp: true,
+}
 
 export function useSingBox() {
   const service = createSingBox()
@@ -85,7 +90,7 @@ export function useSingBox() {
 }
 
 export function useSingBoxConfig() {
-  const log = useTauriStorage<Log>('log', {}, 'config.json')
+  const log = useTauriStorage<Log>('log', DEFAULT_LOG, 'config.json')
   const dns = useTauriStorage('dns', {}, 'config.json')
   const ntp = useTauriStorage('ntp', {}, 'config.json')
   const endpoints = useTauriStorage('endpoints', [], 'config.json')
@@ -106,33 +111,21 @@ export function useSingBoxConfig() {
   }
 }
 
-export function useSingBoxLog(log: Ref<Log>) {
-  const disabled = ref(false)
-  const level = ref<Log['level']>('info')
-  const timestamp = ref(true)
-  const output = ref('')
-  const text = ref('')
-
-  const options = computed<Log>(() => ({
-    disabled: disabled.value,
-    level: level.value,
-    output: output.value,
-    timestamp: timestamp.value,
-  }))
+export function useSingBoxLog() {
+  const text = ref<string[]>([])
 
   async function setup() {
-    if (!Object.keys(log?.value ?? {}).length)
-      output.value = join(await appDataDir(), 'box.log')
-    log.value = options.value
+    const lines = await readTextFileLines('SingBox.log', {
+      baseDir: BaseDirectory.AppLog,
+    })
+    for await (const line of lines) {
+      text.value.push(line)
+    }
   }
 
   setup()
 
   return {
-    disabled,
-    level,
-    output,
-    timestamp,
     text,
   }
 }
