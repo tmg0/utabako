@@ -3,7 +3,7 @@ use tauri::{
     menu::{Menu, MenuItem},
     plugin::{Builder, TauriPlugin},
     tray::TrayIconBuilder,
-    Manager, RunEvent, Runtime,
+    Manager, RunEvent, Runtime, Theme,
 };
 
 mod error;
@@ -19,9 +19,10 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
 
-            let default_tray_icon =
-                Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoInactive.png"))
-                    .unwrap();
+            let default_tray_icon = Image::from_bytes(include_bytes!(
+                "../../../icons/Tray32x32LogoInactiveDark.png"
+            ))
+            .unwrap();
 
             let _ = TrayIconBuilder::with_id("__UTABAKO:TRAY")
                 .icon(default_tray_icon)
@@ -56,6 +57,32 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                 }
                 _ => {}
             },
+
+            RunEvent::Ready => {
+                let window = app.get_webview_window("main").unwrap();
+                let theme = window.theme();
+
+                if let Ok(theme) = theme {
+                    let tray = app.tray_by_id("__UTABAKO:TRAY");
+
+                    let tray_icon = match theme {
+                        Theme::Light => Image::from_bytes(include_bytes!(
+                            "../../../icons/Tray32x32LogoInactive.png"
+                        ))
+                        .unwrap(),
+                        Theme::Dark => Image::from_bytes(include_bytes!(
+                            "../../../icons/Tray32x32LogoInactiveDark.png"
+                        ))
+                        .unwrap(),
+                        _ => app.default_window_icon().unwrap().clone(),
+                    };
+
+                    if let Some(value) = tray {
+                        let _ = value.set_icon(Some(tray_icon));
+                    }
+                }
+            }
+
             RunEvent::ExitRequested { api, code, .. } => {
                 if code.is_none() {
                     api.prevent_exit();

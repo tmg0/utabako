@@ -1,5 +1,5 @@
 use crate::{Error, SingBoxState};
-use tauri::{command, image::Image, AppHandle, State};
+use tauri::{command, image::Image, AppHandle, Manager, State, Theme};
 use tokio::{runtime::Runtime, sync::RwLock};
 
 #[command]
@@ -10,8 +10,19 @@ pub async fn start(
 ) -> Result<(), Error> {
     let _ = state.write().await.start(&app, config);
 
+    let window = app.get_webview_window("main").unwrap();
+    let theme = window.theme()?;
     let tray = app.tray_by_id("__UTABAKO:TRAY");
-    let tray_icon = Image::from_bytes(include_bytes!("../../../icons/Tray32x32Logo.png")).unwrap();
+
+    let tray_icon = match theme {
+        Theme::Light => {
+            Image::from_bytes(include_bytes!("../../../icons/Tray32x32Logo.png")).unwrap()
+        }
+        Theme::Dark => {
+            Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoDark.png")).unwrap()
+        }
+        _ => app.default_window_icon().unwrap().clone(),
+    };
 
     if let Some(value) = tray {
         let _ = value.set_icon(Some(tray_icon));
@@ -24,9 +35,20 @@ pub async fn start(
 pub fn stop(app: AppHandle, state: State<'_, RwLock<SingBoxState>>) -> Result<(), Error> {
     let _ = exit(state);
 
+    let window = app.get_webview_window("main").unwrap();
+    let theme = window.theme()?;
     let tray = app.tray_by_id("__UTABAKO:TRAY");
-    let tray_icon =
-        Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoInactive.png")).unwrap();
+
+    let tray_icon = match theme {
+        Theme::Light => {
+            Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoInactive.png")).unwrap()
+        }
+        Theme::Dark => Image::from_bytes(include_bytes!(
+            "../../../icons/Tray32x32LogoInactiveDark.png"
+        ))
+        .unwrap(),
+        _ => app.default_window_icon().unwrap().clone(),
+    };
 
     if let Some(value) = tray {
         let _ = value.set_icon(Some(tray_icon));
