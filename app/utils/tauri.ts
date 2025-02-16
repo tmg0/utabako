@@ -1,5 +1,4 @@
 import type { StorageLikeAsync } from '@vueuse/core'
-import { defaultWindowIcon } from '@tauri-apps/api/app'
 import { invoke } from '@tauri-apps/api/core'
 import { appDataDir } from '@tauri-apps/api/path'
 import { LazyStore } from '@tauri-apps/plugin-store'
@@ -13,37 +12,10 @@ interface SystemProxy {
   protocol: string
 }
 
-const DEFAULTS_STORE: Record<string, any> = {
-  log: {},
-  dns: {},
-  ntp: {},
-  endpoints: [],
-
-  inbounds: [{
-    listen: '::',
-    listen_port: DEFAULT_SING_BOX_INBOUND_PORT,
-    type: 'mixed',
-  }],
-
-  outbounds: [],
-  route: {},
-  experimental: {},
-}
-
 export function sleep(ms = 300) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms)
   })
-}
-
-function isEmpty(value: any) {
-  if (Array.isArray(value))
-    return !value.length
-
-  if (typeof value === 'object')
-    return !!Object.keys(value).length
-
-  return !value
 }
 
 export function until(value: () => any | Promise<any>, truthyValue: any = true, ms = 500, retries = 10): Promise<void> {
@@ -78,8 +50,7 @@ export function createTrauriStorage(path: string): StorageLikeAsync {
     },
 
     async setItem(key, value) {
-      const defaults = DEFAULTS_STORE?.[key] ?? ''
-      await store.set(key, isEmpty(value) ? defaults : value)
+      await store.set(key, value)
     },
 
     async removeItem(key) {
