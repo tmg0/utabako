@@ -20,9 +20,10 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
 
             let default_tray_icon =
-                Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoInactive.png")).unwrap();
+                Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoInactive.png"))
+                    .unwrap();
 
-            let _ = TrayIconBuilder::new()
+            let _ = TrayIconBuilder::with_id("__UTABAKO:TRAY")
                 .icon(default_tray_icon)
                 .menu(&menu)
                 .on_menu_event(move |app, event| match event.id.as_ref() {

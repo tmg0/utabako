@@ -20,7 +20,7 @@ impl SingBoxState {
         SingBoxState { service: None }
     }
 
-    pub(crate) fn start<R: Runtime>(&mut self, app: AppHandle<R>, config: String) -> Result<()> {
+    pub(crate) fn start<R: Runtime>(&mut self, app: &AppHandle<R>, config: String) -> Result<()> {
         if self.service.is_none() {
             let tauri_cmd = app.shell().sidecar("sing-box").unwrap();
             let mut std_cmd = std::process::Command::from(tauri_cmd);
@@ -50,7 +50,7 @@ pub fn init() -> TauriPlugin<tauri::Wry> {
         .on_event(|app, event| match event {
             RunEvent::Exit => {
                 let state = app.state::<RwLock<SingBoxState>>();
-                let _ = commands::stop(state);
+                let _ = commands::exit(state);
             }
             _ => {}
         })
