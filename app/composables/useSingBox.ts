@@ -1,8 +1,11 @@
+import { appDataDir } from '@tauri-apps/api/path'
+import { join } from 'pathe'
+
 export interface Log {
-  disabled: boolean
-  level: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'panic'
-  output: string
-  timestamp: boolean
+  disabled?: boolean
+  level?: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'panic'
+  output?: string
+  timestamp?: boolean
 }
 
 export interface VmessOutbound {
@@ -82,7 +85,7 @@ export function useSingBox() {
 }
 
 export function useSingBoxConfig() {
-  const log = useTauriStorage<Partial<Log>>('log', {}, 'config.json')
+  const log = useTauriStorage<Log>('log', {}, 'config.json')
   const dns = useTauriStorage('dns', {}, 'config.json')
   const ntp = useTauriStorage('ntp', {}, 'config.json')
   const endpoints = useTauriStorage('endpoints', [], 'config.json')
@@ -100,5 +103,36 @@ export function useSingBoxConfig() {
     outbounds,
     route,
     experimental,
+  }
+}
+
+export function useSingBoxLog(log: Ref<Log>) {
+  const disabled = ref(false)
+  const level = ref<Log['level']>('info')
+  const timestamp = ref(true)
+  const output = ref('')
+  const text = ref('')
+
+  const options = computed<Log>(() => ({
+    disabled: disabled.value,
+    level: level.value,
+    output: output.value,
+    timestamp: timestamp.value,
+  }))
+
+  async function setup() {
+    if (!Object.keys(log?.value ?? {}).length)
+      output.value = join(await appDataDir(), 'box.log')
+    log.value = options.value
+  }
+
+  setup()
+
+  return {
+    disabled,
+    level,
+    output,
+    timestamp,
+    text,
   }
 }
