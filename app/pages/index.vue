@@ -2,6 +2,10 @@
 import ChevronRight from '~icons/heroicons/chevron-right'
 import GlobeAsiaAustraliaSolid from '~icons/heroicons/globe-asia-australia-solid'
 
+definePageMeta({
+  keepalive: true,
+})
+
 enum ProxyStatus {
   NOT_CONNECTED = 'Not connected',
   CONNECTING = 'Connecting...',

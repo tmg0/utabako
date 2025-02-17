@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  keepalive: true,
+})
+
 let originIndex: string
 
 const { servers } = useServers()
