@@ -9,7 +9,7 @@ exclude = ["/examples", "/dist-js", "/guest-js", "/node_modules"]
 links = "tauri-plugin-system-tray"
 
 [dependencies]
-tauri = { version = "2.2.4", features = ["image-png"] }
+tauri = { version = "2.2.5", features = ["image-png"] }
 serde = "1.0"
 thiserror = "2"
 
