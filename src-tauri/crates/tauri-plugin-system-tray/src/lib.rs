@@ -32,8 +32,8 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                         let window = app.get_webview_window("main").unwrap();
                         if !window.is_visible().unwrap() {
                             window.show().unwrap();
-                            window.set_focus().unwrap();
                         }
+                        window.set_focus().unwrap();
                     }
                     "quit" => {
                         app.exit(0);
