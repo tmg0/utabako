@@ -3,7 +3,7 @@ use tauri::{
     menu::{Menu, MenuItem},
     plugin::{Builder, TauriPlugin},
     tray::TrayIconBuilder,
-    Manager, RunEvent, Runtime, Theme,
+    Manager, RunEvent, Runtime, Theme, ActivationPolicy
 };
 
 mod error;
@@ -19,10 +19,9 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
 
-            let default_tray_icon = Image::from_bytes(include_bytes!(
-                "../../../icons/Tray32x32LogoBlack0.png"
-            ))
-            .unwrap();
+            let default_tray_icon =
+                Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoBlack0.png"))
+                    .unwrap();
 
             let _ = TrayIconBuilder::with_id("__UTABAKO:TRAY")
                 .icon(default_tray_icon)
@@ -34,6 +33,9 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                             window.show().unwrap();
                         }
                         window.set_focus().unwrap();
+
+                        #[cfg(target_os = "macos")]
+                        app.set_activation_policy(ActivationPolicy::Regular).unwrap();
                     }
                     "quit" => {
                         app.exit(0);
@@ -53,6 +55,10 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                 tauri::WindowEvent::CloseRequested { api, .. } => {
                     let window = app.get_webview_window(label.as_str()).unwrap();
                     window.hide().unwrap();
+
+                    #[cfg(target_os = "macos")]
+                    app.set_activation_policy(ActivationPolicy::Accessory).unwrap();
+
                     api.prevent_close();
                 }
                 _ => {}

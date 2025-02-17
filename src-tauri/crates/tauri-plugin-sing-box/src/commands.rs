@@ -43,10 +43,9 @@ pub fn stop(app: AppHandle, state: State<'_, RwLock<SingBoxState>>) -> Result<()
         Theme::Light => {
             Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoBlack0.png")).unwrap()
         }
-        Theme::Dark => Image::from_bytes(include_bytes!(
-            "../../../icons/Tray32x32LogoWhite0.png"
-        ))
-        .unwrap(),
+        Theme::Dark => {
+            Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoWhite0.png")).unwrap()
+        }
         _ => app.default_window_icon().unwrap().clone(),
     };
 
