@@ -12,23 +12,26 @@ enum ProxyStatus {
 const globalStore = useGlobalStore()
 const configStore = useConfigStore()
 const { isConnected } = storeToRefs(globalStore)
-const { inbounds, outbounds } = storeToRefs(configStore)
+const { outbounds } = storeToRefs(configStore)
 const { isLoading, enable, disable } = useSingBox()
 const router = useRouter()
+const visible = ref(false)
 
 const outbound = computed(() => outbounds.value?.[0])
-const inbound = computed(() => inbounds.value?.[0])
-const disabled = computed(() => !inbound.value || !outbound.value)
+
+onMounted(async () => {
+  await sleep()
+  visible.value = !outbound.value
+})
 
 async function onChangeStatus(value: boolean) {
-  if (disabled.value)
+  if (!outbound.value) {
+    visible.value = true
     return
+  }
 
-  if (value)
-    await enable()
-  else
-    await disable()
-
+  const fn = value ? enable : disable
+  await fn()
   isConnected.value = value
 }
 </script>
@@ -44,7 +47,7 @@ async function onChangeStatus(value: boolean) {
 
           <div class="flex items-center gap-2">
             <span class="text-muted-foreground">{{ isConnected ? (isLoading ? ProxyStatus.DISCONNECTING : ProxyStatus.CONNECTED) : (isLoading ? ProxyStatus.CONNECTING : ProxyStatus.NOT_CONNECTED) }}</span>
-            <Switch :disabled="disabled" :checked="isConnected" @update:checked="onChangeStatus" />
+            <Switch :checked="isConnected" @update:checked="onChangeStatus" />
           </div>
         </div>
       </div>
@@ -92,5 +95,7 @@ async function onChangeStatus(value: boolean) {
         </div>
       </div>
     </div>
+
+    <ServerCreationDrawer v-model:open="visible" />
   </div>
 </template>

@@ -1,15 +1,23 @@
 <script setup lang="ts">
+let originIndex: string
+
 const { servers } = useServers()
-const router = useRouter()
-const store = useConfigStore()
-const { outbounds } = storeToRefs(store)
+const configStore = useConfigStore()
+const globalStore = useGlobalStore()
+const { outbounds } = storeToRefs(configStore)
+const { isConnected } = storeToRefs(globalStore)
 const outbound = computed(() => outbounds.value?.[0])
 const selected = ref<string>()
 const { isLoading, restart } = useSingBox()
+const router = useRouter()
+
+const hosts = computed(() => servers.value.map(host))
+const outboundHost = computed(() => host(outbound.value))
 
 onMounted(async () => {
   await sleep(50)
-  selected.value = host(outbound.value)
+  originIndex = hosts.value.findIndex(h => h === outboundHost.value).toString()
+  selected.value = originIndex
 })
 
 function host(value?: Outbound) {
@@ -23,29 +31,24 @@ function host(value?: Outbound) {
   }
 }
 
-async function onSave() {
-  const server = servers.value.find(v => host(v) === selected.value)
+async function onUpldate(value: string) {
+  if (originIndex === value)
+    return
+  const index = Number(value)
+  const server = servers.value[index]
   if (server)
     outbounds.value = [server]
   await restart()
-  router.replace({ name: 'index' })
+  if (isConnected.value)
+    router.replace({ name: 'index' })
+  selected.value = value
 }
 </script>
 
 <template>
-  <div class="p-5">
-    <RadioGroup v-model="selected">
-      <ServerRadioGroup v-for="(server, index) in servers" :key="index" :value="host(server)" />
+  <div class="p-5 text-xs">
+    <RadioGroup :model-value="selected" :disabled="isLoading" @update:model-value="onUpldate">
+      <ServerRadioGroup v-for="(item, index) in hosts" :key="index" :label="item" :value="index" :metadata="servers[index]" />
     </RadioGroup>
-
-    <div class="flex justify-end gap-2 mt-5">
-      <Button size="sm" variant="ghost" @click="router.replace({ name: 'index' })">
-        Cancel
-      </Button>
-
-      <Button size="sm" :disabled="host(outbound) === selected || isLoading" @click="onSave">
-        Save Changes
-      </Button>
-    </div>
   </div>
 </template>

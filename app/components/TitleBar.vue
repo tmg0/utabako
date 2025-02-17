@@ -14,7 +14,7 @@ const router = useRouter()
           UtaBako
         </Button>
 
-        <div v-else class="flex mx-2 gap-1 items-center text-xs">
+        <div v-else class="flex mx-2 gap-1 items-center text-xs cursor-pointer" @click="router.replace({ name: 'index' })">
           <img src="/images/utabako.png" class="size-5">
           <span>UtaBako</span>
         </div>

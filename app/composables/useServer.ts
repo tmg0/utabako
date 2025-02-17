@@ -13,6 +13,7 @@ export function useServerStatus(value: MaybeRef<string>, options: UseServerStatu
   const server = computed(() => unref(value))
 
   async function execute() {
+    status.value = ServerStatus.UNKNOWN
     status.value = await pingService(server.value) ? ServerStatus.ONLINE : ServerStatus.OFFLINE
   }
 
