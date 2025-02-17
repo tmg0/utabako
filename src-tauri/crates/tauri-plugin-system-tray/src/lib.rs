@@ -3,7 +3,7 @@ use tauri::{
     menu::{Menu, MenuItem},
     plugin::{Builder, TauriPlugin},
     tray::TrayIconBuilder,
-    Manager, RunEvent, Runtime, Theme, ActivationPolicy
+    ActivationPolicy, Manager, RunEvent, Runtime, Theme,
 };
 
 mod error;
@@ -14,38 +14,6 @@ pub use error::{Error, Result};
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
     Builder::new("system-tray")
         .invoke_handler(tauri::generate_handler![])
-        .setup(|app, _| {
-            let show_i = MenuItem::with_id(app, "show", "Show", true, None::<&str>)?;
-            let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-            let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
-
-            let default_tray_icon =
-                Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoBlack0.png"))
-                    .unwrap();
-
-            let _ = TrayIconBuilder::with_id("__UTABAKO:TRAY")
-                .icon(default_tray_icon)
-                .menu(&menu)
-                .on_menu_event(move |app, event| match event.id.as_ref() {
-                    "show" => {
-                        let window = app.get_webview_window("main").unwrap();
-                        if !window.is_visible().unwrap() {
-                            window.show().unwrap();
-                        }
-                        window.set_focus().unwrap();
-
-                        #[cfg(target_os = "macos")]
-                        app.set_activation_policy(ActivationPolicy::Regular).unwrap();
-                    }
-                    "quit" => {
-                        app.exit(0);
-                    }
-                    _ => {}
-                })
-                .build(app)?;
-
-            Ok(())
-        })
         .on_event(|app, event| match event {
             tauri::RunEvent::WindowEvent {
                 label,
@@ -57,7 +25,8 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                     window.hide().unwrap();
 
                     #[cfg(target_os = "macos")]
-                    app.set_activation_policy(ActivationPolicy::Accessory).unwrap();
+                    app.set_activation_policy(ActivationPolicy::Accessory)
+                        .unwrap();
 
                     api.prevent_close();
                 }
@@ -68,10 +37,12 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                 let window = app.get_webview_window("main").unwrap();
                 let theme = window.theme();
 
-                if let Ok(theme) = theme {
-                    let tray = app.tray_by_id("__UTABAKO:TRAY");
+                let show_i = MenuItem::with_id(app, "show", "Show", true, None::<&str>).unwrap();
+                let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>).unwrap();
+                let menu = Menu::with_items(app, &[&show_i, &quit_i]).unwrap();
 
-                    let tray_icon = match theme {
+                let tray_icon = match theme {
+                    Ok(theme) => match theme {
                         Theme::Light => Image::from_bytes(include_bytes!(
                             "../../../icons/Tray32x32LogoBlack0.png"
                         ))
@@ -81,12 +52,31 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                         ))
                         .unwrap(),
                         _ => app.default_window_icon().unwrap().clone(),
-                    };
+                    },
+                    Err(..) => app.default_window_icon().unwrap().clone(),
+                };
 
-                    if let Some(value) = tray {
-                        let _ = value.set_icon(Some(tray_icon));
-                    }
-                }
+                let _ = TrayIconBuilder::with_id("__UTABAKO:TRAY")
+                    .icon(tray_icon)
+                    .menu(&menu)
+                    .on_menu_event(move |app, event| match event.id.as_ref() {
+                        "show" => {
+                            let window = app.get_webview_window("main").unwrap();
+                            if !window.is_visible().unwrap() {
+                                window.show().unwrap();
+                            }
+                            window.set_focus().unwrap();
+
+                            #[cfg(target_os = "macos")]
+                            app.set_activation_policy(ActivationPolicy::Regular)
+                                .unwrap();
+                        }
+                        "quit" => {
+                            app.exit(0);
+                        }
+                        _ => {}
+                    })
+                    .build(app);
             }
 
             RunEvent::ExitRequested { api, code, .. } => {
