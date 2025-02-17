@@ -20,7 +20,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
 
             let default_tray_icon = Image::from_bytes(include_bytes!(
-                "../../../icons/Tray32x32LogoInactiveDark.png"
+                "../../../icons/Tray32x32LogoBlack0.png"
             ))
             .unwrap();
 
@@ -67,11 +67,11 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
 
                     let tray_icon = match theme {
                         Theme::Light => Image::from_bytes(include_bytes!(
-                            "../../../icons/Tray32x32LogoInactive.png"
+                            "../../../icons/Tray32x32LogoBlack0.png"
                         ))
                         .unwrap(),
                         Theme::Dark => Image::from_bytes(include_bytes!(
-                            "../../../icons/Tray32x32LogoInactiveDark.png"
+                            "../../../icons/Tray32x32LogoWhite0.png"
                         ))
                         .unwrap(),
                         _ => app.default_window_icon().unwrap().clone(),

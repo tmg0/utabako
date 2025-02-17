@@ -16,10 +16,10 @@ pub async fn start(
 
     let tray_icon = match theme {
         Theme::Light => {
-            Image::from_bytes(include_bytes!("../../../icons/Tray32x32Logo.png")).unwrap()
+            Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoBlack.png")).unwrap()
         }
         Theme::Dark => {
-            Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoDark.png")).unwrap()
+            Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoWhite.png")).unwrap()
         }
         _ => app.default_window_icon().unwrap().clone(),
     };
@@ -41,10 +41,10 @@ pub fn stop(app: AppHandle, state: State<'_, RwLock<SingBoxState>>) -> Result<()
 
     let tray_icon = match theme {
         Theme::Light => {
-            Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoInactive.png")).unwrap()
+            Image::from_bytes(include_bytes!("../../../icons/Tray32x32LogoBlack0.png")).unwrap()
         }
         Theme::Dark => Image::from_bytes(include_bytes!(
-            "../../../icons/Tray32x32LogoInactiveDark.png"
+            "../../../icons/Tray32x32LogoWhite0.png"
         ))
         .unwrap(),
         _ => app.default_window_icon().unwrap().clone(),
