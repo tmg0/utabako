@@ -53,11 +53,12 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                         .unwrap(),
                         _ => app.default_window_icon().unwrap().clone(),
                     },
-                    Err(..) => app.default_window_icon().unwrap().clone(),
+                    _ => app.default_window_icon().unwrap().clone(),
                 };
 
                 let _ = TrayIconBuilder::with_id("__UTABAKO:TRAY")
                     .icon(tray_icon)
+                    .icon_as_template(true)
                     .menu(&menu)
                     .on_menu_event(move |app, event| match event.id.as_ref() {
                         "show" => {

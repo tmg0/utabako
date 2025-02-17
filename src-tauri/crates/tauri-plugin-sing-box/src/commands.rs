@@ -26,6 +26,7 @@ pub async fn start(
 
     if let Some(value) = tray {
         let _ = value.set_icon(Some(tray_icon));
+        let _ = value.set_icon_as_template(true);
     }
 
     Ok(())
@@ -51,6 +52,7 @@ pub fn stop(app: AppHandle, state: State<'_, RwLock<SingBoxState>>) -> Result<()
 
     if let Some(value) = tray {
         let _ = value.set_icon(Some(tray_icon));
+        let _ = value.set_icon_as_template(true);
     }
 
     Ok(())
