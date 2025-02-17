@@ -3,8 +3,9 @@ use tauri::{
     menu::{Menu, MenuItem},
     plugin::{Builder, TauriPlugin},
     tray::TrayIconBuilder,
-    ActivationPolicy, Manager, RunEvent, Runtime, Theme,
+    Manager, RunEvent, Runtime, Theme,
 };
+
 
 mod error;
 
@@ -25,7 +26,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                     window.hide().unwrap();
 
                     #[cfg(target_os = "macos")]
-                    app.set_activation_policy(ActivationPolicy::Accessory)
+                    app.set_activation_policy(tauri::ActivationPolicy::Accessory)
                         .unwrap();
 
                     api.prevent_close();
