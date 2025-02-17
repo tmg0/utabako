@@ -15,7 +15,7 @@ const hosts = computed(() => servers.value.map(host))
 const outboundHost = computed(() => host(outbound.value))
 
 onMounted(async () => {
-  await sleep(50)
+  await sleep()
   originIndex = hosts.value.findIndex(h => h === outboundHost.value).toString()
   selected.value = originIndex
 })
