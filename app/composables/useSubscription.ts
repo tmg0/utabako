@@ -5,17 +5,17 @@ interface SubmitOptions {
 }
 
 export interface SubscriptionOptions {
-  servers: Outbound[]
+  servers: ProxyOutbound[]
 }
 
 const parser = {
-  shadowsocks(value: string): Outbound | undefined {
+  shadowsocks(value: string): ProxyOutbound | undefined {
     try {
       const [encode] = value.replace('ss://', '').split('#') as [string]
       const [method, password, server, port] = atob(encode).split(/:|@/)
 
       if (server && server && method && password) {
-        return defineSingBoxOutbound({
+        return defineSingBoxOutbound<ProxyOutbound>({
           type: 'shadowsocks',
           tag: 'proxy',
           server,
@@ -30,14 +30,14 @@ const parser = {
     }
   },
 
-  vmess(value: string): Outbound | undefined {
+  vmess(value: string): ProxyOutbound | undefined {
     try {
       const [encode] = value.replace('vmess://', '').split('#') as [string]
       const { add, port, id, aid } = destr<Record<string, any>>(atob(encode))
       const security = 'aes-128-gcm'
 
       if (add && port && id) {
-        return defineSingBoxOutbound({
+        return defineSingBoxOutbound<ProxyOutbound>({
           type: 'vmess',
           server: add,
           server_port: Number(port),
@@ -67,7 +67,7 @@ export function useSubscription() {
     try {
       const decode = atob(data.value)
 
-      const outbounds: (Outbound | undefined)[] = decode.split('\n').map((url) => {
+      const outbounds: (ProxyOutbound | undefined)[] = decode.split('\n').map((url) => {
         if (url.startsWith('ss'))
           return parser.shadowsocks(url)
         if (url.startsWith('vmess'))
@@ -76,7 +76,7 @@ export function useSubscription() {
         return undefined
       }).filter(Boolean)
 
-      return outbounds as Outbound[]
+      return outbounds as ProxyOutbound[]
     }
     catch {
       return []
@@ -100,7 +100,7 @@ export function useSubscription() {
     else
       subscriptions.value = [...subscriptions.value, [url.value, { servers: servers.value }]]
 
-    outbounds.value = [servers.value[0]!]
+    outbounds.value = [servers.value[0]!] as ProxyOutbound[]
     url.value = ''
     afterSubmit?.()
   }

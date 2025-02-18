@@ -24,7 +24,7 @@ onMounted(async () => {
   selected.value = originIndex
 })
 
-function host(value?: Outbound) {
+function host(value?: ProxyOutbound) {
   const a = [
     value?.server,
     value?.server_port,
@@ -39,7 +39,7 @@ async function onUpldate(value: string) {
   if (originIndex === value)
     return
   const index = Number(value)
-  const server = servers.value[index]
+  const server = servers.value[index] as ProxyOutbound
   if (server)
     outbounds.value = [server]
   await restart()

@@ -41,7 +41,8 @@ export interface DnsOutbound {
   tag?: string
 }
 
-export type Outbound = ShadowsocksOutbound | VmessOutbound | DirectOutbound | BlockOutbound | DnsOutbound
+export type ProxyOutbound = VmessOutbound | ShadowsocksOutbound
+export type Outbound = ProxyOutbound | DirectOutbound | BlockOutbound | DnsOutbound
 
 export interface Inbound {
   listen?: string

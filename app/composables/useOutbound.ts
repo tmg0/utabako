@@ -1,4 +1,4 @@
-export function useOutbound(value: MaybeRef<Outbound | undefined>) {
+export function useOutbound(value: MaybeRef<ProxyOutbound | undefined>) {
   const outbound = computed(() => unref(value))
 
   const host = computed(() => {

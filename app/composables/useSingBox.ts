@@ -48,17 +48,17 @@ export function useSingBox() {
 export function useSingBoxOutbounds() {
   const outbounds = useTauriStorage<Outbound[]>('outbounds', DEFAULT_OUTBOUNDS, 'config.json')
 
-  return computed<Outbound[]>({
+  return computed<ProxyOutbound[]>({
     get() {
       if (['shadowsocks', 'vmess'].includes(outbounds.value[0]?.type ?? '')) {
-        return [outbounds.value[0]!]
+        return [outbounds.value[0]!] as ProxyOutbound[]
       }
 
       return []
     },
 
     set(value) {
-      outbounds.value = [...value, ...DEFAULT_OUTBOUNDS]
+      outbounds.value = [...value.map(defineSingBoxOutbound), ...DEFAULT_OUTBOUNDS]
     },
   })
 }

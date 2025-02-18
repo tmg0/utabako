@@ -4,7 +4,7 @@ export const useConfigStore = defineStore('config', () => {
 
   watchEffect(() => {
     if (!config.outbounds.value.length && servers.value.length)
-      config.outbounds.value = [defineSingBoxOutbound(servers.value[0]!)]
+      config.outbounds.value = [servers.value[0]!] as ProxyOutbound[]
   })
 
   return {
