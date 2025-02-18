@@ -1,49 +1,5 @@
 import { BaseDirectory, readTextFileLines } from '@tauri-apps/plugin-fs'
 
-export interface Log {
-  disabled?: boolean
-  level?: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'panic'
-  output?: string
-  timestamp?: boolean
-}
-
-export interface VmessOutbound {
-  type: 'vmess'
-  server: string
-  server_port: number
-  uuid: string
-  security: string
-  alter_id: number
-}
-
-export interface ShadowsocksOutbound {
-  type: 'shadowsocks'
-  server: string
-  server_port: number
-  method: string
-  password: string
-}
-
-export type Outbound = ShadowsocksOutbound | VmessOutbound
-
-export interface Inbound {
-  listen: string
-  listen_port: number
-  type: 'mixed'
-}
-
-const DEFAULT_INBOUNDS: Inbound[] = [{
-  listen: '::',
-  listen_port: DEFAULT_SING_BOX_INBOUND_PORT,
-  type: 'mixed',
-}]
-
-const DEFAULT_LOG: Log = {
-  disabled: true,
-  level: 'info',
-  timestamp: true,
-}
-
 export function useSingBox() {
   const service = createSingBox()
   const proxy = createSystemProxy()
@@ -89,15 +45,33 @@ export function useSingBox() {
   }
 }
 
+export function useSingBoxOutbounds() {
+  const outbounds = useTauriStorage<Outbound[]>('outbounds', DEFAULT_OUTBOUNDS, 'config.json')
+
+  return computed<Outbound[]>({
+    get() {
+      if (['shadowsocks', 'vmess'].includes(outbounds.value[0]?.type ?? '')) {
+        return [outbounds.value[0]!]
+      }
+
+      return []
+    },
+
+    set(value) {
+      outbounds.value = [...value, ...DEFAULT_OUTBOUNDS]
+    },
+  })
+}
+
 export function useSingBoxConfig() {
   const log = useTauriStorage<Log>('log', DEFAULT_LOG, 'config.json')
-  const dns = useTauriStorage('dns', {}, 'config.json')
+  const dns = useTauriStorage('dns', DEFAULT_DNS, 'config.json')
   const ntp = useTauriStorage('ntp', {}, 'config.json')
   const endpoints = useTauriStorage('endpoints', [], 'config.json')
   const inbounds = useTauriStorage<Inbound[]>('inbounds', DEFAULT_INBOUNDS, 'config.json')
-  const outbounds = useTauriStorage<Outbound[]>('outbounds', [], 'config.json')
-  const route = useTauriStorage('route', {}, 'config.json')
-  const experimental = useTauriStorage('experimental', {}, 'config.json')
+  const outbounds = useSingBoxOutbounds()
+  const route = useTauriStorage('route', DEFAULT_ROUTE, 'config.json')
+  const experimental = useTauriStorage('experimental', DEFAULT_EXPERIMENTAL, 'config.json')
 
   return {
     log,

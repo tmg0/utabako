@@ -6,6 +6,7 @@
   "scripts": {
     "build": "node scripts/build.js",
     "build:sing-box": "cd sing-box && make",
+    "prepare": "nuxt prepare",
     "dev": "nuxt dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

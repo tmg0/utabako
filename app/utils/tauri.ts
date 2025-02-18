@@ -84,7 +84,7 @@ export function createSingBox() {
 
 export function createSystemProxy() {
   return {
-    enable(protocol = 'socks') {
+    enable(protocol = 'http') {
       return invoke('plugin:system-proxy|set', {
         isEnabled: true,
         port: DEFAULT_SING_BOX_INBOUND_PORT,

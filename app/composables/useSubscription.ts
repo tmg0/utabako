@@ -9,19 +9,20 @@ export interface SubscriptionOptions {
 }
 
 const parser = {
-  shadowsocks(value: string): ShadowsocksOutbound | undefined {
+  shadowsocks(value: string): Outbound | undefined {
     try {
       const [encode] = value.replace('ss://', '').split('#') as [string]
       const [method, password, server, port] = atob(encode).split(/:|@/)
 
       if (server && server && method && password) {
-        return {
+        return defineSingBoxOutbound({
           type: 'shadowsocks',
+          tag: 'proxy',
           server,
           server_port: Number(port),
           method,
           password,
-        }
+        })
       }
     }
     catch {
@@ -29,21 +30,21 @@ const parser = {
     }
   },
 
-  vmess(value: string): VmessOutbound | undefined {
+  vmess(value: string): Outbound | undefined {
     try {
       const [encode] = value.replace('vmess://', '').split('#') as [string]
       const { add, port, id, aid } = destr<Record<string, any>>(atob(encode))
       const security = 'aes-128-gcm'
 
       if (add && port && id) {
-        return {
+        return defineSingBoxOutbound({
           type: 'vmess',
           server: add,
           server_port: Number(port),
           uuid: id,
           security,
           alter_id: Number(aid ?? 0),
-        }
+        })
       }
     }
     catch {

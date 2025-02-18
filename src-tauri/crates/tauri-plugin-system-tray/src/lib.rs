@@ -70,7 +70,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                             window.set_focus().unwrap();
 
                             #[cfg(target_os = "macos")]
-                            app.set_activation_policy(ActivationPolicy::Regular)
+                            app.set_activation_policy(tauri::ActivationPolicy::Regular)
                                 .unwrap();
                         }
                         "quit" => {
