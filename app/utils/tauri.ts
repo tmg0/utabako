@@ -12,7 +12,7 @@ interface SystemProxy {
   protocol: string
 }
 
-export function sleep(ms = 50) {
+export function sleep(ms = 300) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms)
   })
@@ -41,7 +41,7 @@ export function until(value: () => any | Promise<any>, truthyValue: any = true, 
 }
 
 export function createTrauriStorage(path: string): StorageLikeAsync {
-  const store = new LazyStore(path)
+  const store = new LazyStore(path, { autoSave: false })
 
   return {
     async getItem(key) {

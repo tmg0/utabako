@@ -5,11 +5,10 @@ definePageMeta({
 
 let originIndex: string
 
-const { servers } = useServers()
 const configStore = useConfigStore()
 const globalStore = useGlobalStore()
 const { outbounds } = storeToRefs(configStore)
-const { isConnected } = storeToRefs(globalStore)
+const { servers, isConnected } = storeToRefs(globalStore)
 const outbound = computed(() => outbounds.value?.[0])
 const selected = ref<string>()
 const { isLoading, restart } = useSingBox()
@@ -18,9 +17,8 @@ const router = useRouter()
 const hosts = computed(() => servers.value.map(host))
 const outboundHost = computed(() => host(outbound.value))
 
-onMounted(async () => {
-  await sleep()
-  originIndex = hosts.value.findIndex(h => h === outboundHost.value).toString()
+const unwatch = watchImmediate(hosts, (value) => {
+  originIndex = value.findIndex(h => h === outboundHost.value).toString()
   selected.value = originIndex
 })
 
@@ -36,6 +34,7 @@ function host(value?: ProxyOutbound) {
 }
 
 async function onUpldate(value: string) {
+  unwatch()
   if (originIndex === value)
     return
   const index = Number(value)

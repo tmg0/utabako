@@ -21,44 +21,10 @@ export const DEFAULT_LOG: Log = {
   timestamp: true,
 }
 
-export const DEFAULT_DNS = {
-  servers: [
-    {
-      tag: 'google',
-      address: 'tls://dns.google',
-      address_resolver: 'ali',
-      address_strategy: 'ipv4_only',
-      detour: 'proxy',
-    },
-    {
-      tag: 'ali',
-      address: '223.5.5.5',
-      detour: 'direct',
-    },
-  ],
-
-  rules: [
-    {
-      rule_set: ['geosite-cn'],
-      action: 'route',
-      server: 'google',
-    },
-  ],
-
-  final: 'ali',
-  disable_cache: true,
-  strategy: 'ipv4_only',
-}
+export const DEFAULT_DNS = {}
 
 export const DEFAULT_ROUTE: Partial<Route> = {
   rules: [
-    {
-      action: 'sniff',
-    },
-    {
-      protocol: 'dns',
-      action: 'hijack-dns',
-    },
     {
       rule_set: 'geosite-cn',
       outbound: 'direct',

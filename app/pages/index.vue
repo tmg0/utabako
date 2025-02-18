@@ -23,9 +23,8 @@ const visible = ref(false)
 
 const outbound = computed(() => outbounds.value?.[0])
 
-onMounted(async () => {
-  await sleep()
-  visible.value = !outbound.value
+watchImmediate(outbound, (value) => {
+  visible.value = !value
 })
 
 async function onChangeStatus(value: boolean) {
