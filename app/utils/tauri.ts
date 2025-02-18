@@ -41,7 +41,7 @@ export function until(value: () => any | Promise<any>, truthyValue: any = true, 
 }
 
 export function createTrauriStorage(path: string): StorageLikeAsync {
-  const store = new LazyStore(path, { autoSave: false })
+  const store = new LazyStore(path)
 
   return {
     async getItem(key) {
