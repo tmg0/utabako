@@ -47,19 +47,25 @@ export interface Inbound {
   listen?: string
   listen_port?: number
   type: 'mixed' | 'http' | 'tun'
+  route_address?: string[]
   set_system_proxy?: boolean
   address?: string[]
   auto_route?: boolean
-  sniff?: boolean
+  tag?: string
+  strict_route?: boolean
 }
 
 export interface RouteRule {
   protocol?: string
+  inbound?: string
   outbound?: string
   rule_set?: string | string[]
   action?: string
-  
+  sniffer?: any[]
   ip_is_private?: boolean
+  timeout?: string
+  override_address?: string
+  override_port?: number
 }
 
 export interface RouteRuleSet {
