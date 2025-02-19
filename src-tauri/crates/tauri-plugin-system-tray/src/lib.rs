@@ -6,7 +6,6 @@ use tauri::{
     Manager, RunEvent, Runtime, Theme,
 };
 
-
 mod error;
 
 pub use error::{Error, Result};
