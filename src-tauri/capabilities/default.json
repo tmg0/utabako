@@ -18,7 +18,6 @@
     "shell:default",
     "shell:allow-execute",
     "sing-box:default",
-    "system-proxy:default",
     "health-check:default",
     "store:default",
     "os:default",

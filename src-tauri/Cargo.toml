@@ -33,7 +33,6 @@ tauri-plugin-http = "2"
 tauri-plugin-os = "2"
 tauri-plugin-process = "2"
 tauri-plugin-sing-box = { version = "0.1.0", path = "./crates/tauri-plugin-sing-box" }
-tauri-plugin-system-proxy = { version = "0.1.0", path = "./crates/tauri-plugin-system-proxy" }
 tauri-plugin-health-check = { version = "0.1.0", path = "./crates/tauri-plugin-health-check" }
 tauri-plugin-tray = { version = "0.1.0", path = "./crates/tauri-plugin-tray" }
 tauri-plugin-fs = "2"

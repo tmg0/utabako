@@ -2,7 +2,6 @@ import { BaseDirectory, readTextFileLines } from '@tauri-apps/plugin-fs'
 
 export function useSingBox() {
   const service = createSingBox()
-  const proxy = createSystemProxy()
   const store = useGlobalStore()
   const { isConnected } = storeToRefs(store)
 
@@ -11,19 +10,13 @@ export function useSingBox() {
 
   async function enable() {
     isLoading.value = true
-    await Promise.all([
-      service.start(),
-      proxy.enable(),
-    ])
+    await service.start()
     isLoading.value = false
   }
 
   async function disable() {
     isLoading.value = true
-    await Promise.all([
-      service.stop(),
-      proxy.disable(),
-    ])
+    await service.stop()
     isLoading.value = false
   }
 

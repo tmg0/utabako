@@ -12,6 +12,7 @@ export const DEFAULT_INBOUNDS: Inbound[] = [
     type: 'mixed',
     listen: '::',
     listen_port: DEFAULT_SING_BOX_INBOUND_PORT,
+    set_system_proxy: true,
   },
 ]
 

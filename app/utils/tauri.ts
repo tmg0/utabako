@@ -4,14 +4,6 @@ import { appDataDir } from '@tauri-apps/api/path'
 import { LazyStore } from '@tauri-apps/plugin-store'
 import { join } from 'pathe'
 
-interface SystemProxy {
-  is_enabled: boolean
-  host: string
-  port: number
-  bypass: string
-  protocol: string
-}
-
 export function sleep(ms = 300) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms)
@@ -78,26 +70,6 @@ export function createSingBox() {
 
     get isAvailable() {
       return pingService(['127.0.0.1', DEFAULT_SING_BOX_INBOUND_PORT].join(':'))
-    },
-  }
-}
-
-export function createSystemProxy() {
-  return {
-    enable(protocol = 'https') {
-      return invoke('plugin:system-proxy|set', {
-        isEnabled: true,
-        port: DEFAULT_SING_BOX_INBOUND_PORT,
-        protocol,
-      })
-    },
-
-    disable() {
-      return invoke('plugin:system-proxy|unset')
-    },
-
-    get() {
-      return invoke<SystemProxy>('plugin:system-proxy|get')
     },
   }
 }

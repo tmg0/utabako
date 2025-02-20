@@ -17,7 +17,6 @@ pub fn run() {
         .plugin(tauri_plugin_decorum::init())
         .plugin(tauri_plugin_tray::init())
         .plugin(tauri_plugin_sing_box::init())
-        .plugin(tauri_plugin_system_proxy::init())
         .plugin(tauri_plugin_health_check::init())
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
