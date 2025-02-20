@@ -18,7 +18,6 @@ const configStore = useConfigStore()
 const { isConnected } = storeToRefs(globalStore)
 const { outbounds } = storeToRefs(configStore)
 const { isLoading, enable, disable } = useSingBox()
-const router = useRouter()
 const visible = ref(false)
 
 const outbound = computed(() => outbounds.value?.[0])
@@ -61,24 +60,26 @@ async function onChangeStatus(value: boolean) {
         </div>
 
         <div class="rounded-md border bg-zinc-100 py-2 px-3">
-          <div class="flex items-center justify-between cursor-pointer" @click="router.replace({ name: 'servers' })">
-            <div class="flex items-center gap-2">
-              <div class=" bg-primary size-8 rounded-lg flex items-center justify-center">
-                <GlobeAsiaAustraliaSolid class="size-6 text-white" />
+          <ServerSelector>
+            <div class="flex items-center justify-between cursor-pointer">
+              <div class="flex items-center gap-2">
+                <div class=" bg-primary size-8 rounded-lg flex items-center justify-center">
+                  <GlobeAsiaAustraliaSolid class="size-6 text-white" />
+                </div>
+
+                <div>
+                  <div class="font-semibold">
+                    {{ outbound.server }}
+                  </div>
+                  <div class="text-muted-foreground text-[0.6rem] capitalize">
+                    {{ outbound.type }}
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <div class="font-semibold">
-                  {{ outbound.server }}
-                </div>
-                <div class="text-muted-foreground text-[0.6rem] capitalize">
-                  {{ outbound.type }}
-                </div>
-              </div>
+              <ChevronRight />
             </div>
-
-            <ChevronRight />
-          </div>
+          </ServerSelector>
 
           <Separator class="my-2" />
 
@@ -99,6 +100,6 @@ async function onChangeStatus(value: boolean) {
       </div>
     </div>
 
-    <ServerCreationDrawer v-model:open="visible" />
+    <ServerCreator v-model:open="visible" />
   </div>
 </template>
