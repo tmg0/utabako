@@ -5,8 +5,16 @@ use tauri::{
 
 use tauri_plugin_shell::ShellExt;
 use tokio::sync::RwLock;
+use std::{thread, time};
+
+#[cfg(target_os = "macos")]
 use nix::sys::signal::{kill, Signal};
+
+#[cfg(target_os = "macos")]
 use nix::unistd::Pid;
+
+#[cfg(target_os = "windows")]
+use windows::Win32::System::Console::{GenerateConsoleCtrlEvent, CTRL_BREAK_EVENT};
 
 mod commands;
 mod error;
@@ -14,29 +22,40 @@ mod error;
 pub use error::{Error, Result};
 
 pub(crate) struct SingBoxState {
-    pid: Option<i32>,
+    process: Option<std::process::Child>,
 }
 
 impl SingBoxState {
     pub(crate) fn new() -> Self {
-        SingBoxState { pid: None }
+        SingBoxState { process: None }
     }
 
     pub(crate) fn start<R: Runtime>(&mut self, app: &AppHandle<R>, config: String) -> Result<()> {
-        if self.pid.is_none() {
+        if self.process.is_none() {
             let tauri_cmd = app.shell().sidecar("sing-box").unwrap();
             let mut std_cmd = std::process::Command::from(tauri_cmd);
             let child = std_cmd.args(["run", "-c", &config]).spawn()?;
-            let pid = child.id() as i32;
-            self.pid = Some(pid);
+            self.process = Some(child);
         }
         Ok(())
     }
 
     pub(crate) fn stop(&mut self) -> Result<()> {
-        if let Some(value) = self.pid {
-            kill(Pid::from_raw(value), Signal::SIGINT).unwrap();
-            self.pid = None;
+        if let Some(ref mut value) = self.process {
+            let pid = value.id();
+
+            #[cfg(target_os = "macos")]
+            kill(Pid::from_raw(pid as i32), Signal::SIGINT).unwrap();
+
+            #[cfg(target_os = "windows")]
+            unsafe {
+                let _ = GenerateConsoleCtrlEvent(CTRL_BREAK_EVENT, pid);
+            }
+
+            thread::sleep(time::Duration::from_secs(5));
+            let _ = value.kill();
+
+            self.process = None;
         }
         Ok(())
     }
