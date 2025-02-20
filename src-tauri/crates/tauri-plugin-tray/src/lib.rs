@@ -12,7 +12,7 @@ pub use error::{Error, Result};
 
 /// Initializes the plugin.
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
-    Builder::new("system-tray")
+    Builder::new("_tray")
         .invoke_handler(tauri::generate_handler![])
         .on_event(|app, event| match event {
             tauri::RunEvent::WindowEvent {
