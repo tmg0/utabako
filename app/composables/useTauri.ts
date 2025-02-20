@@ -5,7 +5,7 @@ export function useTauriStorage<T = unknown>(key: string, initialValue: T, file:
   return useStorageAsync<T>(
     key,
     initialValue,
-    createTrauriStorage(file),
+    createTauriStorage(file),
     {
       serializer: {
         read: (v: any) => v ?? undefined,

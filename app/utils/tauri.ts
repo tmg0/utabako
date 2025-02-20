@@ -32,7 +32,7 @@ export function until(value: () => any | Promise<any>, truthyValue: any = true, 
   })
 }
 
-export function createTrauriStorage(path: string): StorageLikeAsync {
+export function createTauriStorage(path: string): StorageLikeAsync {
   const store = new LazyStore(path)
 
   return {
