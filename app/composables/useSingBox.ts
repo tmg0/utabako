@@ -1,4 +1,5 @@
 import { BaseDirectory, readTextFileLines } from '@tauri-apps/plugin-fs'
+import { toast } from 'vue-sonner'
 
 export function useSingBox() {
   const service = createSingBox()
@@ -10,8 +11,18 @@ export function useSingBox() {
 
   async function enable() {
     isLoading.value = true
-    await service.start()
-    isLoading.value = false
+
+    try {
+      await service.start()
+    }
+    catch {
+      toast('Timeout', {
+        description: 'Health check failed after 60 seconds',
+      })
+    }
+    finally {
+      isLoading.value = false
+    }
   }
 
   async function disable() {
