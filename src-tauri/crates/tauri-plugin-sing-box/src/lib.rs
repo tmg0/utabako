@@ -13,6 +13,9 @@ use nix::sys::signal::{kill, Signal};
 #[cfg(target_os = "macos")]
 use nix::unistd::Pid;
 
+#[cfg(target_os = "windows")]
+use windows::Win32::System::Console::{GenerateConsoleCtrlEvent, CTRL_BREAK_EVENT};
+
 mod commands;
 mod error;
 
