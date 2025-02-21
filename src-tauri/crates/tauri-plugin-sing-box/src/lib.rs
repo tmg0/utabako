@@ -6,6 +6,7 @@ use tauri::{
 use std::process::{Child, Command};
 use tauri_plugin_shell::ShellExt;
 use tokio::sync::RwLock;
+use rustem_proxy::SystemProxy;
 
 #[cfg(target_os = "macos")]
 use nix::sys::signal::{kill, Signal};
@@ -47,6 +48,8 @@ impl SingBoxState {
 
             #[cfg(target_os = "windows")]
             let _ = value.kill();
+
+            SystemProxy::unset();
 
             self.process = None;
         }

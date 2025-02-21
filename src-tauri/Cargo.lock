@@ -1121,7 +1121,7 @@ dependencies = [
  "rustc_version",
  "toml 0.8.20",
  "vswhom",
- "winreg",
+ "winreg 0.52.0",
 ]
 
 [[package]]
@@ -3710,6 +3710,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustem_proxy"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4326bd94bff6a447b9ec693f33668beb34bf12168ba034b7c12600dca501f82d"
+dependencies = [
+ "winapi",
+ "winreg 0.51.0",
+]
+
+[[package]]
 name = "rustix"
 version = "0.38.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4627,6 +4637,7 @@ name = "tauri-plugin-sing-box"
 version = "0.1.0"
 dependencies = [
  "nix",
+ "rustem_proxy",
  "serde",
  "tauri",
  "tauri-plugin",
@@ -5964,6 +5975,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "59690dea168f2198d1a3b0cac23b8063efcd11012f10ae4698f284808c8ef603"
 dependencies = [
  "memchr",
+]
+
+[[package]]
+name = "winreg"
+version = "0.51.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "937f3df7948156640f46aacef17a70db0de5917bda9c92b0f751f3a955b588fc"
+dependencies = [
+ "cfg-if",
+ "windows-sys 0.48.0",
 ]
 
 [[package]]
