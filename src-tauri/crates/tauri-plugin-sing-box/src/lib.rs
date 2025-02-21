@@ -3,9 +3,9 @@ use tauri::{
     AppHandle, Manager, RunEvent, Runtime,
 };
 
+use std::process::{Child, Command};
 use tauri_plugin_shell::ShellExt;
 use tokio::sync::RwLock;
-use std::{thread, time};
 
 #[cfg(target_os = "macos")]
 use nix::sys::signal::{kill, Signal};
@@ -13,16 +13,13 @@ use nix::sys::signal::{kill, Signal};
 #[cfg(target_os = "macos")]
 use nix::unistd::Pid;
 
-#[cfg(target_os = "windows")]
-use windows::Win32::System::Console::{GenerateConsoleCtrlEvent, CTRL_BREAK_EVENT};
-
 mod commands;
 mod error;
 
 pub use error::{Error, Result};
 
 pub(crate) struct SingBoxState {
-    process: Option<std::process::Child>,
+    process: Option<Child>,
 }
 
 impl SingBoxState {
@@ -33,7 +30,7 @@ impl SingBoxState {
     pub(crate) fn start<R: Runtime>(&mut self, app: &AppHandle<R>, config: String) -> Result<()> {
         if self.process.is_none() {
             let tauri_cmd = app.shell().sidecar("sing-box").unwrap();
-            let mut std_cmd = std::process::Command::from(tauri_cmd);
+            let mut std_cmd = Command::from(tauri_cmd);
             let child = std_cmd.args(["run", "-c", &config]).spawn()?;
             self.process = Some(child);
         }
@@ -51,9 +48,6 @@ impl SingBoxState {
             unsafe {
                 let _ = GenerateConsoleCtrlEvent(CTRL_BREAK_EVENT, pid);
             }
-
-            thread::sleep(time::Duration::from_secs(5));
-            let _ = value.kill();
 
             self.process = None;
         }
