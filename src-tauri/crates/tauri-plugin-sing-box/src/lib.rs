@@ -42,15 +42,14 @@ impl SingBoxState {
 
     pub(crate) fn stop(&mut self) -> Result<()> {
         if let Some(ref mut value) = self.process {
+            #[cfg(target_os = "macos")]
             let pid = value.id();
 
             #[cfg(target_os = "macos")]
             kill(Pid::from_raw(pid as i32), Signal::SIGINT).unwrap();
 
             #[cfg(target_os = "windows")]
-            unsafe {
-                let _ = GenerateConsoleCtrlEvent(CTRL_BREAK_EVENT, pid);
-            }
+            let _ = value.kill();
 
             self.process = None;
         }
