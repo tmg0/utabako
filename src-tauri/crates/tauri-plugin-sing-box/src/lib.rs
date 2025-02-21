@@ -4,8 +4,8 @@ use tauri::{
 };
 
 use std::process::{Child, Command};
-use tauri_plugin_shell::ShellExt;
 use tokio::sync::RwLock;
+use tauri_plugin_shell::ShellExt;
 use rustem_proxy::SystemProxy;
 
 #[cfg(target_os = "macos")]
@@ -30,6 +30,17 @@ impl SingBoxState {
 
     pub(crate) fn start<R: Runtime>(&mut self, app: &AppHandle<R>, config: String) -> Result<()> {
         if self.process.is_none() {
+            #[cfg(target_os = "macos")]
+            {
+                let resource_dir = app.path().resource_dir()?;
+                let sing_box = resource_dir.join("sing-box").to_string_lossy().into_owned();
+                let mut std_cmd = Command::new("osascript");
+                let e = format!("do shell script \"{} run -c {}\" with administrator privileges", sing_box, config.replace(" ", "\\ "));
+                println!("{}", e);
+                let mut osascript = std_cmd.arg("-e").arg(e).spawn()?;
+                osascript.wait()?;
+            }
+
             let tauri_cmd = app.shell().sidecar("sing-box").unwrap();
             let mut std_cmd = Command::from(tauri_cmd);
             let child = std_cmd.args(["run", "-c", &config]).spawn()?;
