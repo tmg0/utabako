@@ -3,7 +3,6 @@ import { toast } from 'vue-sonner'
 
 export function useSingBox() {
   const service = createSingBox()
-  const { inbounds } = storeToRefs(useConfigStore())
   const { isConnected } = storeToRefs(useGlobalStore())
 
   const isLoading = ref(false)
@@ -13,8 +12,6 @@ export function useSingBox() {
     isLoading.value = true
 
     try {
-      if (inbounds.value.some(({ type }) => type === 'tun'))
-        await service.elevatePrivileges()
       await service.start()
     }
     catch (error: any) {
