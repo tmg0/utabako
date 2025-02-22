@@ -13,6 +13,9 @@ use nix::sys::signal::{kill, Signal};
 #[cfg(target_os = "macos")]
 use nix::unistd::Pid;
 
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
+
 mod commands;
 mod error;
 
@@ -40,7 +43,13 @@ impl SingBoxState {
             let singbox = dunce::canonicalize(resource_dir.join(format!("sing-box{}", suffix)))?
                 .to_string_lossy()
                 .into_owned();
-            let child = Command::new(singbox).args(["run", "-c", &config]).spawn()?;
+
+            let mut cmd = Command::new(singbox);
+
+            #[cfg(target_os = "windows")]
+            cmd.creation_flags(0x08000000);
+
+            let child = cmd.args(["run", "-c", &config]).spawn()?;
             self.process = Some(child);
         }
         Ok(())
