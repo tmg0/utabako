@@ -68,7 +68,9 @@ pub async fn elevate_privileges(app: AppHandle) -> Result<(), Error> {
     #[cfg(target_os = "windows")]
     {
         let resource_dir = app.path().resource_dir()?;
-        let singbox = dunce::canonicalize(resource_dir.join("sing-box.exe"))?.to_string_lossy().into_owned();
+        let singbox = dunce::canonicalize(resource_dir.join("sing-box.exe"))?
+            .to_string_lossy()
+            .into_owned();
         let current_user = RegKey::predef(enums::HKEY_CURRENT_USER);
         let sub_key = "Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers";
         let key = current_user.open_subkey_with_flags(sub_key, enums::KEY_SET_VALUE)?;

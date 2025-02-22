@@ -5,7 +5,6 @@ use tauri::{
 
 use rustem_proxy::SystemProxy;
 use std::process::{Child, Command};
-use tauri_plugin_shell::ShellExt;
 use tokio::sync::RwLock;
 
 #[cfg(target_os = "macos")]
@@ -30,9 +29,18 @@ impl SingBoxState {
 
     pub(crate) fn start<R: Runtime>(&mut self, app: &AppHandle<R>, config: String) -> Result<()> {
         if self.process.is_none() {
-            let tauri_cmd = app.shell().sidecar("sing-box").unwrap();
-            let mut std_cmd = Command::from(tauri_cmd);
-            let child = std_cmd.args(["run", "-c", &config]).spawn()?;
+            let resource_dir = app.path().resource_dir()?;
+
+            #[cfg(target_os = "macos")]
+            let suffix = "";
+
+            #[cfg(target_os = "windows")]
+            let suffix = ".exe";
+
+            let singbox = dunce::canonicalize(resource_dir.join(format!("sing-box{}", suffix)))?
+                .to_string_lossy()
+                .into_owned();
+            let child = Command::new(singbox).args(["run", "-c", &config]).spawn()?;
             self.process = Some(child);
         }
         Ok(())
