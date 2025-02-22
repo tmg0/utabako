@@ -4636,6 +4636,7 @@ dependencies = [
 name = "tauri-plugin-sing-box"
 version = "0.1.0"
 dependencies = [
+ "dunce",
  "nix",
  "rustem_proxy",
  "serde",
@@ -4919,6 +4920,7 @@ dependencies = [
  "libc",
  "mio",
  "pin-project-lite",
+ "signal-hook-registry",
  "socket2",
  "tokio-macros",
  "windows-sys 0.52.0",

@@ -1,10 +1,10 @@
 export const useGlobalStore = defineStore('global', () => {
   const isConnected = ref(false)
-  const { isAvailable } = useSingBox()
+  const { available } = useSingBox()
   const { servers } = useServers()
 
   async function setup() {
-    isConnected.value = await isAvailable.value
+    isConnected.value = await available.value
   }
 
   setup()

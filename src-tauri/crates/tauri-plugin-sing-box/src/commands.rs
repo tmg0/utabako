@@ -1,6 +1,9 @@
 use crate::{Error, SingBoxState};
 use tauri::{command, image::Image, AppHandle, Manager, State, Theme};
-use tokio::{runtime::Runtime, sync::RwLock};
+use tokio::{runtime::Runtime, sync::RwLock, process::Command};
+
+#[cfg(target_os = "windows")]
+use dunce;
 
 #[command]
 pub async fn start(
@@ -53,6 +56,46 @@ pub fn stop(app: AppHandle, state: State<'_, RwLock<SingBoxState>>) -> Result<()
     if let Some(value) = tray {
         let _ = value.set_icon(Some(tray_icon));
         let _ = value.set_icon_as_template(true);
+    }
+
+    Ok(())
+}
+
+#[command]
+pub async fn elevate_privileges(app: AppHandle) -> Result<(), Error> {
+    #[cfg(target_os = "windows")]
+    {
+        let resource_dir = app.path().resource_dir()?;
+        let singbox = dunce::canonicalize(resource_dir.join("sing-box.exe"))?.to_string_lossy().into_owned();
+
+        let mut reg = Command::new("reg").args([
+            "add",
+            "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers",
+            "/v",
+            &singbox,
+            "/t",
+            "REG_SZ",
+            "/d",
+            "RunAsAdmin",
+            "/f"
+        ]).spawn()?;
+
+        reg.wait().await?;
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        let resource_dir = app.path().resource_dir()?;
+        let sing_box = resource_dir.join("sing-box").to_string_lossy().into_owned();
+        let mut std_cmd = Command::new("osascript");
+        let e = format!(
+            "do shell script \"{} run -c {}\" with administrator privileges",
+            sing_box,
+            config.replace(" ", "\\ ")
+        );
+        println!("{}", e);
+        let mut osascript = std_cmd.arg("-e").arg(e).spawn()?;
+        osascript.wait()?;
     }
 
     Ok(())

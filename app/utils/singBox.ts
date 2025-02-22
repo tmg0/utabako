@@ -15,14 +15,19 @@ export function createSingBox() {
       await invoke<string>('plugin:sing-box|start', {
         config: join(await appDataDir(), 'config.json'),
       })
-      await until(() => this.isAvailable)
+      await until(() => this.available)
     },
 
-    stop() {
-      return invoke<string>('plugin:sing-box|stop')
+    async stop() {
+      await invoke<string>('plugin:sing-box|stop')
+      await until(() => this.available, false)
     },
 
-    get isAvailable() {
+    elevatePrivileges() {
+      return invoke('plugin:sing-box|elevate_privileges')
+    },
+
+    get available() {
       return pingService(['127.0.0.1', DEFAULT_SING_BOX_INBOUND_PORT].join(':'))
     },
   }

@@ -3,10 +3,10 @@ use tauri::{
     AppHandle, Manager, RunEvent, Runtime,
 };
 
-use std::process::{Child, Command};
-use tokio::sync::RwLock;
-use tauri_plugin_shell::ShellExt;
 use rustem_proxy::SystemProxy;
+use std::process::{Child, Command};
+use tauri_plugin_shell::ShellExt;
+use tokio::sync::RwLock;
 
 #[cfg(target_os = "macos")]
 use nix::sys::signal::{kill, Signal};
@@ -30,17 +30,6 @@ impl SingBoxState {
 
     pub(crate) fn start<R: Runtime>(&mut self, app: &AppHandle<R>, config: String) -> Result<()> {
         if self.process.is_none() {
-            #[cfg(target_os = "macos")]
-            {
-                let resource_dir = app.path().resource_dir()?;
-                let sing_box = resource_dir.join("sing-box").to_string_lossy().into_owned();
-                let mut std_cmd = Command::new("osascript");
-                let e = format!("do shell script \"{} run -c {}\" with administrator privileges", sing_box, config.replace(" ", "\\ "));
-                println!("{}", e);
-                let mut osascript = std_cmd.arg("-e").arg(e).spawn()?;
-                osascript.wait()?;
-            }
-
             let tauri_cmd = app.shell().sidecar("sing-box").unwrap();
             let mut std_cmd = Command::from(tauri_cmd);
             let child = std_cmd.args(["run", "-c", &config]).spawn()?;
@@ -71,7 +60,11 @@ impl SingBoxState {
 /// Initializes the plugin.
 pub fn init() -> TauriPlugin<tauri::Wry> {
     Builder::new("sing-box")
-        .invoke_handler(tauri::generate_handler![commands::start, commands::stop,])
+        .invoke_handler(tauri::generate_handler![
+            commands::start,
+            commands::stop,
+            commands::elevate_privileges
+        ])
         .setup(|app, _| {
             app.manage(RwLock::new(SingBoxState::new()));
             Ok(())

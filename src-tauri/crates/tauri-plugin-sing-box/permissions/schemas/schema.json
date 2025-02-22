@@ -295,6 +295,16 @@
       "type": "string",
       "oneOf": [
         {
+          "description": "Enables the elevate_privileges command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-elevate-privileges"
+        },
+        {
+          "description": "Denies the elevate_privileges command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-elevate-privileges"
+        },
+        {
           "description": "Enables the start command without any pre-configured scope.",
           "type": "string",
           "const": "allow-start"

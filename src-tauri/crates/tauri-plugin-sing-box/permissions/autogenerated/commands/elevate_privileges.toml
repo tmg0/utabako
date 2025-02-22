@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-elevate-privileges"
+description = "Enables the elevate_privileges command without any pre-configured scope."
+commands.allow = ["elevate_privileges"]
+
+[[permission]]
+identifier = "deny-elevate-privileges"
+description = "Denies the elevate_privileges command without any pre-configured scope."
+commands.deny = ["elevate_privileges"]

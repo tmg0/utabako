@@ -4,6 +4,7 @@ Default permissions for the plugin
 
 - `allow-start`
 - `allow-stop`
+- `allow-elevate-privileges`
 
 ## Permission Table
 
@@ -13,6 +14,32 @@ Default permissions for the plugin
 <th>Description</th>
 </tr>
 
+
+<tr>
+<td>
+
+`sing-box:allow-elevate-privileges`
+
+</td>
+<td>
+
+Enables the elevate_privileges command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`sing-box:deny-elevate-privileges`
+
+</td>
+<td>
+
+Denies the elevate_privileges command without any pre-configured scope.
+
+</td>
+</tr>
 
 <tr>
 <td>
