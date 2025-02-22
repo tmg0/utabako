@@ -1,9 +1,12 @@
 use crate::{Error, SingBoxState};
 use tauri::{command, image::Image, AppHandle, Manager, State, Theme};
-use tokio::{runtime::Runtime, sync::RwLock, process::Command};
+use tokio::{runtime::Runtime, sync::RwLock};
 
 #[cfg(target_os = "windows")]
 use dunce;
+
+#[cfg(target_os = "windows")]
+use winreg::{enums, RegKey};
 
 #[command]
 pub async fn start(
@@ -67,20 +70,10 @@ pub async fn elevate_privileges(app: AppHandle) -> Result<(), Error> {
     {
         let resource_dir = app.path().resource_dir()?;
         let singbox = dunce::canonicalize(resource_dir.join("sing-box.exe"))?.to_string_lossy().into_owned();
-
-        let mut reg = Command::new("reg").args([
-            "add",
-            "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers",
-            "/v",
-            &singbox,
-            "/t",
-            "REG_SZ",
-            "/d",
-            "RunAsAdmin",
-            "/f"
-        ]).spawn()?;
-
-        reg.wait().await?;
+        let current_user = RegKey::predef(enums::HKEY_CURRENT_USER);
+        let sub_key = "Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers";
+        let key = current_user.open_subkey_with_flags(sub_key, enums::KEY_SET_VALUE)?;
+        key.set_value(&singbox, &"RunAsAdmin")?;
     }
 
     #[cfg(target_os = "macos")]

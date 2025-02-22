@@ -21,6 +21,7 @@ export function useSingBox() {
       toast('Timeout', {
         description: 'Health check failed after 60 seconds',
       })
+      disable()
     }
     finally {
       isLoading.value = false
