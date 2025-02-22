@@ -5,6 +5,8 @@
     <main vaul-drawer-wrapper class="flex-1 overflow-y-auto">
       <NuxtPage />
     </main>
+
+    <Toaster />
   </div>
 </template>
 

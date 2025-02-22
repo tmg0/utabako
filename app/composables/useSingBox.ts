@@ -17,11 +17,9 @@ export function useSingBox() {
         await service.elevatePrivileges()
       await service.start()
     }
-    catch {
-      toast('Timeout', {
-        description: 'Health check failed after 60 seconds',
-      })
-      disable()
+    catch (error: any) {
+      toast(error)
+      throw error
     }
     finally {
       isLoading.value = false

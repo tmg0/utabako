@@ -14,8 +14,7 @@ pub async fn start(
     state: State<'_, RwLock<SingBoxState>>,
     config: String,
 ) -> Result<(), Error> {
-    let _ = state.write().await.start(&app, config);
-
+    let result = state.write().await.start(&app, config);
     let window = app.get_webview_window("main").unwrap();
     let theme = window.theme()?;
     let tray = app.tray_by_id("__UTABAKO:TRAY");
@@ -35,7 +34,7 @@ pub async fn start(
         let _ = value.set_icon_as_template(true);
     }
 
-    Ok(())
+    result
 }
 
 #[command]
