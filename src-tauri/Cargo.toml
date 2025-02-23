@@ -34,7 +34,7 @@ tauri-plugin-os = "2"
 tauri-plugin-process = "2"
 tauri-plugin-sing-box = { version = "0.1.0", path = "./crates/tauri-plugin-sing-box" }
 tauri-plugin-health-check = { version = "0.1.0", path = "./crates/tauri-plugin-health-check" }
-tauri-plugin-tray = { version = "0.1.0", path = "./crates/tauri-plugin-tray" }
+tauri-plugin-utray = { version = "0.1.0", path = "./crates/tauri-plugin-utray" }
 tauri-plugin-fs = "2"
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]

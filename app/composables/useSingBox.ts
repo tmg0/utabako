@@ -13,6 +13,7 @@ export function useSingBox() {
 
     try {
       await service.start()
+      invoke.plugin.tray.enable()
     }
     catch (error: any) {
       toast(error)
@@ -26,6 +27,7 @@ export function useSingBox() {
   async function disable() {
     isLoading.value = true
     await service.stop()
+    invoke.plugin.tray.disable()
     isLoading.value = false
   }
 

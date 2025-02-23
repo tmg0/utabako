@@ -3,17 +3,21 @@ use tauri::{
     menu::{Menu, MenuItem},
     plugin::{Builder, TauriPlugin},
     tray::TrayIconBuilder,
-    Manager, RunEvent, Runtime, Theme,
+    Manager, RunEvent, Theme,
 };
 
+mod commands;
 mod error;
 
 pub use error::{Error, Result};
 
 /// Initializes the plugin.
-pub fn init<R: Runtime>() -> TauriPlugin<R> {
-    Builder::new("_tray")
-        .invoke_handler(tauri::generate_handler![])
+pub fn init() -> TauriPlugin<tauri::Wry> {
+    Builder::new("utray")
+        .invoke_handler(tauri::generate_handler![
+            commands::enable,
+            commands::disable
+        ])
         .on_event(|app, event| match event {
             tauri::RunEvent::WindowEvent {
                 label,

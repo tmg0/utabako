@@ -295,6 +295,26 @@
       "type": "string",
       "oneOf": [
         {
+          "description": "Enables the disable command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-disable"
+        },
+        {
+          "description": "Denies the disable command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-disable"
+        },
+        {
+          "description": "Enables the enable command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-enable"
+        },
+        {
+          "description": "Denies the enable command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-enable"
+        },
+        {
           "description": "Default permissions for the plugin",
           "type": "string",
           "const": "default"

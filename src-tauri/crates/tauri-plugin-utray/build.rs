@@ -1,4 +1,4 @@
-const COMMANDS: &[&str] = &[];
+const COMMANDS: &[&str] = &["enable", "disable"];
 
 fn main() {
     tauri_plugin::Builder::new(COMMANDS)

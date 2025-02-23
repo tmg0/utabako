@@ -15,7 +15,7 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_decorum::init())
-        .plugin(tauri_plugin_tray::init())
+        .plugin(tauri_plugin_utray::init())
         .plugin(tauri_plugin_sing_box::init())
         .plugin(tauri_plugin_health_check::init())
         .setup(|app| {

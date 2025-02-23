@@ -116,7 +116,7 @@ dependencies = [
  "tauri-plugin-sing-box",
  "tauri-plugin-single-instance",
  "tauri-plugin-store",
- "tauri-plugin-tray",
+ "tauri-plugin-utray",
 ]
 
 [[package]]
@@ -4680,7 +4680,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tauri-plugin-tray"
+name = "tauri-plugin-utray"
 version = "0.1.0"
 dependencies = [
  "serde",

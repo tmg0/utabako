@@ -78,7 +78,7 @@ pub fn init() -> TauriPlugin<tauri::Wry> {
         .on_event(|app, event| match event {
             RunEvent::Exit => {
                 let state = app.state::<RwLock<SingBoxState>>();
-                let _ = commands::exit(state);
+                let _ = commands::stop(state);
             }
             _ => {}
         })

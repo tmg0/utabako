@@ -1,5 +1,5 @@
 import type { StorageLikeAsync } from '@vueuse/core'
-import { invoke } from '@tauri-apps/api/core'
+import { invoke as tauriInvoke } from '@tauri-apps/api/core'
 import { LazyStore } from '@tauri-apps/plugin-store'
 
 export function sleep(ms = 300) {
@@ -49,6 +49,25 @@ export function createTauriStorage(path: string): StorageLikeAsync {
   }
 }
 
+export const invoke = {
+  plugin: {
+    tray: {
+      enable: () => tauriInvoke<boolean>('plugin:utray|enable'),
+      disable: () => tauriInvoke<boolean>('plugin:utray|disable'),
+    },
+
+    singBox: {
+      start: (options: { config: string }) => tauriInvoke('plugin:sing-box|start', options),
+      stop: () => tauriInvoke('plugin:sing-box|stop'),
+      elevatePrivileges: () => tauriInvoke('plugin:sing-box|elevate_privileges'),
+    },
+
+    healthCheck: {
+      ping: (options: { service: string }) => tauriInvoke<boolean>('plugin:health-check|ping', options),
+    },
+  },
+}
+
 export function pingService(service: string) {
-  return invoke<boolean>('plugin:health-check|ping', { service })
+  return tauriInvoke<boolean>('plugin:health-check|ping', { service })
 }
