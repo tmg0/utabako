@@ -67,14 +67,11 @@ pub fn stop(app: AppHandle, state: State<'_, RwLock<SingBoxState>>) -> Result<()
 pub async fn elevate_privileges(app: AppHandle) -> Result<(), Error> {
     #[cfg(target_os = "windows")]
     {
-        let resource_dir = app.path().resource_dir()?;
-        let singbox = dunce::canonicalize(resource_dir.join("sing-box.exe"))?
-            .to_string_lossy()
-            .into_owned();
+        let utabako = executable_resource(&app, "app")?;
         let current_user = RegKey::predef(enums::HKEY_CURRENT_USER);
         let sub_key = "Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers";
         let key = current_user.open_subkey_with_flags(sub_key, enums::KEY_SET_VALUE)?;
-        key.set_value(&singbox, &"RunAsAdmin")?;
+        key.set_value(&utabako, &"RunAsAdmin")?;
     }
 
     #[cfg(target_os = "macos")]
@@ -93,6 +90,20 @@ pub async fn elevate_privileges(app: AppHandle) -> Result<(), Error> {
     }
 
     Ok(())
+}
+
+pub fn executable_resource<R: tauri::Runtime>(app: &AppHandle<R>, program: &str) -> Result<String, Error> {
+    let resource_dir = app.path().resource_dir()?;
+
+    #[cfg(target_os = "macos")]
+    let suffix = "";
+
+    #[cfg(target_os = "windows")]
+    let suffix = ".exe";
+
+    Ok(dunce::canonicalize(resource_dir.join(format!("{}{}", program, suffix)))?
+        .to_string_lossy()
+        .into_owned())
 }
 
 pub fn exit(state: State<'_, RwLock<SingBoxState>>) -> Result<(), Error> {

@@ -32,18 +32,7 @@ impl SingBoxState {
 
     pub(crate) fn start<R: Runtime>(&mut self, app: &AppHandle<R>, config: String) -> Result<()> {
         if self.process.is_none() {
-            let resource_dir = app.path().resource_dir()?;
-
-            #[cfg(target_os = "macos")]
-            let suffix = "";
-
-            #[cfg(target_os = "windows")]
-            let suffix = ".exe";
-
-            let singbox = dunce::canonicalize(resource_dir.join(format!("sing-box{}", suffix)))?
-                .to_string_lossy()
-                .into_owned();
-
+            let singbox = commands::executable_resource(app, "sing-box")?;
             let mut cmd = Command::new(singbox);
 
             #[cfg(target_os = "windows")]
