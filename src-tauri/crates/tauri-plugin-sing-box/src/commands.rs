@@ -92,7 +92,10 @@ pub async fn elevate_privileges(app: AppHandle) -> Result<(), Error> {
     Ok(())
 }
 
-pub fn executable_resource<R: tauri::Runtime>(app: &AppHandle<R>, program: &str) -> Result<String, Error> {
+pub fn executable_resource<R: tauri::Runtime>(
+    app: &AppHandle<R>,
+    program: &str,
+) -> Result<String, Error> {
     let resource_dir = app.path().resource_dir()?;
 
     #[cfg(target_os = "macos")]
@@ -101,9 +104,11 @@ pub fn executable_resource<R: tauri::Runtime>(app: &AppHandle<R>, program: &str)
     #[cfg(target_os = "windows")]
     let suffix = ".exe";
 
-    Ok(dunce::canonicalize(resource_dir.join(format!("{}{}", program, suffix)))?
-        .to_string_lossy()
-        .into_owned())
+    Ok(
+        dunce::canonicalize(resource_dir.join(format!("{}{}", program, suffix)))?
+            .to_string_lossy()
+            .into_owned(),
+    )
 }
 
 pub fn exit(state: State<'_, RwLock<SingBoxState>>) -> Result<(), Error> {
