@@ -47,6 +47,12 @@ export type Outbound = ProxyOutbound | DirectOutbound | BlockOutbound | DnsOutbo
 export interface Inbound {
   listen?: string
   listen_port?: number
+  inet4_address?: string
+  inet6_address?: string
+  mtu?: number
+  sniff?: boolean
+  sniff_override_destination?: boolean
+  stack?: string
   type: 'mixed' | 'http' | 'tun'
   route_address?: string[]
   set_system_proxy?: boolean

@@ -16,6 +16,19 @@ export const DEFAULT_INBOUNDS: Inbound[] = [
   },
 ]
 
+export const DEFAULT_INBOUND_TUN: Inbound = {
+  auto_route: true,
+  inet4_address: '172.16.0.1/30',
+  inet6_address: 'fd00::1/126',
+  mtu: 1492,
+  sniff: true,
+  sniff_override_destination: false,
+  stack: 'system',
+  strict_route: true,
+  tag: 'tun-in',
+  type: 'tun',
+}
+
 export const DEFAULT_LOG: Log = {
   disabled: true,
   level: 'info',
